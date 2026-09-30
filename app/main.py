@@ -3,6 +3,7 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from sqlalchemy import inspect
 
@@ -39,6 +40,15 @@ app = FastAPI(
 )
 # Lists of conferences and listings are large JSON; compressed they shrink about 5-10x.
 app.add_middleware(GZipMiddleware, minimum_size=1000)
+# Lets the frontend, served from another address, call the API from the browser.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=get_settings().cors_origins,
+    allow_origin_regex=get_settings().cors_origin_regex,
+    allow_methods=["GET"],
+    allow_headers=["*"],
+    expose_headers=["Content-Disposition"],  # the export's file name
+)
 app.include_router(browse.router)
 app.include_router(sources.router)
 app.include_router(pipeline.router)

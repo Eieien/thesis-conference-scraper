@@ -33,6 +33,9 @@ uv run python -m scripts.edas_login       # logs in with EDAS_USERNAME/PASSWORD 
   If `/health` disagrees with `.env`, restart the server.
 - On this machine `--reload` has twice failed to pick up code changes. After backend edits,
   check the change is live (or just restart the server) before testing through the API.
+- **CORS** (`app/main.py`): any localhost/127.0.0.1 port may call the API from a browser;
+  deployed frontends go in `CORS_ORIGINS`. GET only, so a web page can't start scraping runs.
+  The frontend's guide is `docs/API.md`.
 - Responses are gzipped. `/conferences` and `/listings` take `compact=true`, which leaves out the
   long text (`description`, `field_sources`) that lists don't show: all 732 conferences drop from
   2.4 MB to 50 KB over the wire.

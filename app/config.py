@@ -19,6 +19,13 @@ class Settings(BaseSettings):
     # and export default to these, and the visualizer opens on them.
     scope_continents: list[str] = ["Asia"]
 
+    # Browser apps on other addresses that may read the API (CORS). Any localhost port is
+    # allowed for development; add a deployed frontend in .env:
+    # CORS_ORIGINS='["https://conferences.example.com"]'. Only GET is allowed, so a web page
+    # can read the data but not start scraping runs.
+    cors_origins: list[str] = []
+    cors_origin_regex: str | None = r"https?://(localhost|127\.0\.0\.1)(:\d+)?"
+
     # Conferences whose start date falls inside this window are kept.
     window_start: date = date(2026, 10, 1)
     window_end: date = date(2026, 11, 30)
