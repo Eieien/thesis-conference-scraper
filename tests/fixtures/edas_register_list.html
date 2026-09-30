@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+  <meta name='google-site-verification' content='bBNAMNOwAoLi2PI_yKwJ9O0pQ9FHvAHTGnr8kOxW0_k'>
+  <meta charset='UTF-8'>
+  <meta name='robots' content='none'>
+  <link rel='icon' type='image/vnd.microsoft.icon' href='/icon/favicon.ico'>
+  <link rel='stylesheet' href='/css/progress.css' type='text/css'>
+  <link rel='stylesheet' href='/css/menu1.css' type='text/css'>
+  <link rel='stylesheet' href='/css/form.css' type='text/css'>
+  <link rel='stylesheet' href='https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css'>
+  <link rel='stylesheet' href='https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css'>
+  <link rel='stylesheet' href='https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css'>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css'>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bs-stepper/dist/css/bs-stepper.css'>
+  <link rel='stylesheet' href='/css/edas.css' type='text/css'>
+  <link rel='stylesheet' href='https://unpkg.com/dropzone@5/dist/min/dropzone.min.css' type='text/css'>
+  <link rel='stylesheet' href='https://edas.info/showCSSStatus.php' type='text/css'>
+
+  <link rel='alternate' type='application/rss+xml'
+   href='rssConferences.php' title='RSS feed for conferences'>
+<title>Conferences open for registration EDAS (1000000 - user@example.com): </title>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='/js/edas.js'></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='/js/times.js' defer></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='https://code.jquery.com/jquery-3.7.1.min.js' crossorigin='anonymous'></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='https://code.jquery.com/ui/1.13.1/jquery-ui.min.js'></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.js'></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='https://cdn.datatables.net/2.1.5/js/dataTables.min.js'></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js' integrity='sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI' crossorigin='anonymous'></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='https://js.stripe.com/v3/'></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4' src='https://kit.fontawesome.com/c98c64ac6a.js' crossorigin='anonymous'></script>
+ <script nonce='c5637c84493512d1b65be99c6b36ffb4'>
+   $(function() {
+     $( '#tabs' ).tabs();
+   });
+</script>
+</head>
+<body>
+<div id='header'>
+<table>
+	<tr>
+		<td><div class="logo" ><img src="icon/EDASlogo.png" height="48" alt="EDAS"></div></td>
+		<td>
+  <nav class="navbar navbar-expand-lg navbar-light bg-edas">
+    <div class="container-fluid">
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+    data-bs-target="#edasmenu"
+    aria-controls="edasmenu"
+    aria-expanded="false"
+    aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="edasmenu">
+    <ul class="navbar-nav mr-auto">
+<li class='nav-item dropdown'>
+<a class='nav-link dropdown-toggle' href='#' id='index' role='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>Home</a>
+<div class='dropdown-menu' aria-labelledby='index'>
+  <a class='dropdown-item' href='logout.php'>Log out</a>
+  </div>
+</li>
+<li class='nav-item'><a class='nav-link' href='listConferencesSubmit.php'>Submit paper</a></li>
+<li class='nav-item'><a class='nav-link' href='listAllTravelgrants.php'>Travel grants</a></li>
+<li class='nav-item active'><a class='nav-link' href='listConferencesRegister.php'>Register</a></li>
+<li class='nav-item'><a class='nav-link' href='createConference.php'>Create conference</a></li>
+<li class='nav-item dropdown'>
+<a class='nav-link dropdown-toggle' href='#' id='my' role='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>My...</a>
+<div class='dropdown-menu' aria-labelledby='my'>
+  <a class='dropdown-item' href='showSelf.php'>My profile</a>
+  <a class='dropdown-item' href='listEmailsent.php'>My email messages</a>
+  <a class='dropdown-item' href='listConferencesChair.php'>Chairing</a>
+  <a class='dropdown-item' href='editAreaInterest.php'>My areas of interest and CFP opt-in</a>
+  <a class='dropdown-item' href='addConflict.php'>My conflicts-of-interest</a>
+  </div>
+</li>
+<li class='nav-item'><a class='nav-link' href='help.php'>Help</a></li>
+    </ul>
+    </div>
+  </div>
+</nav></td>
+	</tr>
+</table>
+</div>
+<div id='main'>
+<h3 >Conferences open for registration</h3>
+<script nonce="0" src="js/sortTableRegister.js" ></script>
+<table class="table table-sm table-striped w-auto" id="sortTable">
+	<thead>
+		<tr>
+			<th>Conference</th>
+			<th>Name</th>
+			<th>Home page</th>
+			<th>Where & When (program)</th>
+			<th>Register self</th>
+			<th>Register others</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><abbr title="19th IEEE International Symposium on Embedded Multicore/Manycore SoCs (MCSoC-2026)">19th IEEE MCSoC-2026</abbr></td>
+			<td><div class="notes" >19th IEEE International Symposium on Embedded Multicore/Manycore SoCs (MCSoC-2026)</div></td>
+			<td align="center"><a target="conferencepage" title="https://mcsoc-forum.org/"  href="https://mcsoc-forum.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Shanghai, China</div><div class="notes" >December 14-20, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i1" href="/registerPerson.php?c=34632&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i2" href="/registerPersonNew.php?c=34632"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 MCSoC-EmbodiCore Global Summit - Embodied AI and Distributed Autonomous Systems">19th IEEE MCSoC-EmbodiCore 2026</abbr></td>
+			<td><div class="notes" >2026 MCSoC-EmbodiCore Global Summit - Embodied AI and Distributed Autonomous Systems</div></td>
+			<td align="center"><a target="conferencepage" title="https://mcsoc-forum.org/"  href="https://mcsoc-forum.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Shanghai, China</div><div class="notes" >December 14-20, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i3" href="/registerPerson.php?c=35385&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i4" href="/registerPersonNew.php?c=35385"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="19th IEEE MCSoC-NeuroCore Global Summit on Neuromorphic Systems and Brain-Inspired Computing">19th IEEE MCSoC-NeuroCore 2026</abbr></td>
+			<td><div class="notes" >19th IEEE MCSoC-NeuroCore Global Summit on Neuromorphic Systems and Brain-Inspired Computing</div></td>
+			<td align="center"><a target="conferencepage" title="https://mcsoc-forum.org/"  href="https://mcsoc-forum.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Shanghai, China</div><div class="notes" >December 14-20, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i5" href="/registerPerson.php?c=34649&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i6" href="/registerPersonNew.php?c=34649"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 2nd International Conference on Artificial Intelligence's Future Implementations (ICAIFI)">2026 2nd ICAIFI</abbr></td>
+			<td><div class="notes" >2026 2nd International Conference on Artificial Intelligence's Future Implementations (ICAIFI)</div></td>
+			<td align="center"><a target="conferencepage" title="https://icaifi.unperba.ac.id"  href="https://icaifi.unperba.ac.id"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Yogyakarta, Indonesia</div><div class="notes" >31 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i7" href="/registerPerson.php?c=35532&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i8" href="/registerPersonNew.php?c=35532"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 2nd International Conference on Computer Sciences, Engineering, and Technology Innovation (ICoCSETI)">2026 2nd ICoCSETI</abbr></td>
+			<td><div class="notes" >2026 2nd International Conference on Computer Sciences, Engineering, and Technology Innovation (ICoCSETI)</div></td>
+			<td align="center"><a target="conferencepage" title="https://icocseti.unindra.ac.id/"  href="https://icocseti.unindra.ac.id/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Jakarta, Indonesia</div><div class="notes" >21 November 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i9" href="/registerPerson.php?c=35094&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i10" href="/registerPersonNew.php?c=35094"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 3rd Beyond Technology Summit on Informatics International Conference (BTS-I2C)">2026 3rd BTS-I2C</abbr></td>
+			<td><div class="notes" >2026 3rd Beyond Technology Summit on Informatics International Conference (BTS-I2C)</div></td>
+			<td align="center"><a target="conferencepage" title="https://bts.unmuhjember.ac.id/"  href="https://bts.unmuhjember.ac.id/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Jember Jawa Timur, Indonesia</div><div class="notes" >19 December 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i11" href="/registerPerson.php?c=35455&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i12" href="/registerPersonNew.php?c=35455"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 9th International Conference on Information and Communications Technology (ICOIACT)">2026 9th ICOIACT</abbr></td>
+			<td><div class="notes" >2026 9th International Conference on Information and Communications Technology (ICOIACT)</div></td>
+			<td align="center"><a target="conferencepage" title="http://www.icoiact.org/"  href="http://www.icoiact.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Tokyo, 〒 , Japan</div><div class="notes" >2-3 December 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i13" href="/registerPerson.php?c=35085&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i14" href="/registerPersonNew.php?c=35085"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE Conference on Antenna Measurements and Applications (CAMA)">2026 IEEE CAMA</abbr></td>
+			<td><div class="notes" >2026 IEEE Conference on Antenna Measurements and Applications (CAMA)</div></td>
+			<td align="center"><a target="conferencepage" title="https://2026ieeecama.org"  href="https://2026ieeecama.org"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Urayasu, Chiba, 〒 , Japan</div><div class="notes" >October 21-23, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i15" href="/registerPerson.php?c=35446&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i16" href="/registerPersonNew.php?c=35446"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="The 2027 International Conference on Smart Innovation, Intelligent Networks, Technological Excellence, and Automation (icsinteXa)">2027 icsinteXa</abbr></td>
+			<td><div class="notes" >The 2027 International Conference on Smart Innovation, Intelligent Networks, Technological Excellence, and Automation (icsinteXa)</div></td>
+			<td align="center"><a target="conferencepage" title="https://icsintexa.uniba-bpn.ac.id/"  href="https://icsintexa.uniba-bpn.ac.id/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Balikpapan Kalimantan Timur, Indonesia</div><div class="notes" >14-15 April 2027</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i17" href="/registerPerson.php?c=35125&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i18" href="/registerPersonNew.php?c=35125"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="The 21-st International Conference on P2P, Parallel, Grid, Cloud and Internet Computing 2026">3PGCIC-2026</abbr></td>
+			<td><div class="notes" >The 21-st International Conference on P2P, Parallel, Grid, Cloud and Internet Computing 2026</div></td>
+			<td align="center"><a target="conferencepage" title="https://voyager.ce.fit.ac.jp/conf/3pgcic/2026/"  href="https://voyager.ce.fit.ac.jp/conf/3pgcic/2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Sydney NSW, Australia</div><div class="notes" >25-28 November 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i19" href="/registerPerson.php?c=34690&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i20" href="/registerPersonNew.php?c=34690"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="International Conference on Advances in Artificial Intelligence 2026">AAI2026</abbr></td>
+			<td><div class="notes" >International Conference on Advances in Artificial Intelligence 2026</div></td>
+			<td align="center"><a target="conferencepage" title="https://aai.unimap.edu.my/"  href="https://aai.unimap.edu.my/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Langkawi Kedah, Malaysia</div><div class="notes" >21-23 December 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i21" href="/registerPerson.php?c=34957&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i22" href="/registerPersonNew.php?c=34957"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="54th Applied Imagery Pattern Recognition Workshop 2026">AIPR 2026</abbr></td>
+			<td><div class="notes" >54th Applied Imagery Pattern Recognition Workshop 2026</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.aipr-workshop.org/"  href="https://www.aipr-workshop.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Washington, D.C., DC, USA</div><div class="notes" >October 12-13, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i23" href="/registerPerson.php?c=35492&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i24" href="/registerPersonNew.php?c=35492"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE Asia Pacific Conference on Wireless and Mobile (APWiMob)">APWiMob 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE Asia Pacific Conference on Wireless and Mobile (APWiMob)</div></td>
+			<td align="center"><a target="conferencepage" title="https://apwimobconf.org/"  href="https://apwimobconf.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Bali, Indonesia</div><div class="notes" >5-7 November 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i25" href="/registerPerson.php?c=35210&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i26" href="/registerPersonNew.php?c=35210"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Conference on Advanced Technologies for Communications (ATC)">ATC'26</abbr></td>
+			<td><div class="notes" >2026 International Conference on Advanced Technologies for Communications (ATC)</div></td>
+			<td align="center"><a target="conferencepage" title="https://atc-conf.org/"  href="https://atc-conf.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Gia Lai Province Gia Lai, Vietnam</div><div class="notes" >October 15-17, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i27" href="/registerPerson.php?c=35288&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i28" href="/registerPersonNew.php?c=35288"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="The 21-st International Conference on Broadband and Wireless Computing, Communication and Applications 2026">BWCCA-2026</abbr></td>
+			<td><div class="notes" >The 21-st International Conference on Broadband and Wireless Computing, Communication and Applications 2026</div></td>
+			<td align="center"><a target="conferencepage" title="https://voyager.ce.fit.ac.jp/conf/bwcca/2026/"  href="https://voyager.ce.fit.ac.jp/conf/bwcca/2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Sydney NSW, Australia</div><div class="notes" >November 25-28, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i29" href="/registerPerson.php?c=34689&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i30" href="/registerPersonNew.php?c=34689"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Conference on Communications, Computing, Cybersecurity, and Informatics (CCCI)">CCCI 2026</abbr></td>
+			<td><div class="notes" >2026 International Conference on Communications, Computing, Cybersecurity, and Informatics (CCCI)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ccci.udg.edu/"  href="https://ccci.udg.edu/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Shanghai, China</div><div class="notes" >October 16-18, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i31" href="/registerPerson.php?c=34569&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i32" href="/registerPersonNew.php?c=34569"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE Conference on Energy Conversion (CENCON)">CENCON 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE Conference on Energy Conversion (CENCON)</div></td>
+			<td align="center"><a target="conferencepage" title="https://attend.ieee.org/cencon-2026/"  href="https://attend.ieee.org/cencon-2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Putrajaya Wilayah Persekutuan Putrajaya, Malaysia</div><div class="notes" >26-27 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i33" href="/registerPerson.php?c=35142&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i34" href="/registerPersonNew.php?c=35142"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 22nd International Conference on Network and Service Management (CNSM)">CNSM 2026</abbr></td>
+			<td><div class="notes" >2026 22nd International Conference on Network and Service Management (CNSM)</div></td>
+			<td align="center"><a target="conferencepage" title="http://www.cnsm-conf.org/2026"  href="http://www.cnsm-conf.org/2026"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Alcalá de Henares, Spain</div><div class="notes" >October 26-30, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i35" href="/registerPerson.php?c=35030&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i36" href="/registerPersonNew.php?c=35030"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Conference On Cyber Management And Engineering (CyMaEn)">CyMaEn'26</abbr></td>
+			<td><div class="notes" >2026 International Conference On Cyber Management And Engineering (CyMaEn)</div></td>
+			<td align="center"><a target="conferencepage" title="https://cymaen.org/"  href="https://cymaen.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Tlemcen, Algeria</div><div class="notes" >11-13 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i37" href="/registerPerson.php?c=34261&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i38" href="/registerPersonNew.php?c=34261"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Conference on Decision Aid Sciences and Applications (DASA)">DASA'26</abbr></td>
+			<td><div class="notes" >2026 International Conference on Decision Aid Sciences and Applications (DASA)</div></td>
+			<td align="center"><a target="conferencepage" title="https://dasa26.mfu.ac.th/"  href="https://dasa26.mfu.ac.th/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Bangkok, Thailand</div><div class="notes" >27-29 December 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i39" href="/registerPerson.php?c=35470&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i40" href="/registerPersonNew.php?c=35470"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="European Business Research Conference 2027">EBRC 2027</abbr></td>
+			<td><div class="notes" >European Business Research Conference 2027</div></td>
+			<td align="center"><a target="conferencepage" title="https://ebrc-uk.org/"  href="https://ebrc-uk.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Sheffield Hallam University, United Kingdom (Great Britain)</div><div class="notes" >June 23-27, 2027</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i41" href="/registerPerson.php?c=35751&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i42" href="/registerPersonNew.php?c=35751"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="The 15-th International Conference on Emerging Internet, Data and Web Technologies 2027">EIDWT-2027</abbr></td>
+			<td><div class="notes" >The 15-th International Conference on Emerging Internet, Data and Web Technologies 2027</div></td>
+			<td align="center"><a target="conferencepage" title="https://voyager.ce.fit.ac.jp/conf/eidwt/2027/"  href="https://voyager.ce.fit.ac.jp/conf/eidwt/2027/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Keqiao International Park (KIP), Shaoxing, China</div><div class="notes" >February 24-27, 2027</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i43" href="/registerPerson.php?c=35432&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i44" href="/registerPersonNew.php?c=35432"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 9th International Energy Conference (ENERGYCON)">ENERGYCON 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 9th International Energy Conference (ENERGYCON)</div></td>
+			<td align="center"><a target="conferencepage" title="https://2026.ieee-energycon.org/"  href="https://2026.ieee-energycon.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Paris, France</div><div class="notes" >October 27-29, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i45" href="/registerPerson.php?c=35054&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i46" href="/registerPersonNew.php?c=35054"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Conference on Emerging Trends in Engineering and Computing (ETECOM)">ETECOM 2026</abbr></td>
+			<td><div class="notes" >2026 International Conference on Emerging Trends in Engineering and Computing (ETECOM)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ieee-etecom.org/"  href="https://ieee-etecom.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Paris (Hybrid), France</div><div class="notes" >October 26-27, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i47" href="/registerPerson.php?c=35157&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i48" href="/registerPersonNew.php?c=35157"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="ETLTC Winter Conference Series 2027">ETLTC2027</abbr></td>
+			<td><div class="notes" >ETLTC Winter Conference Series 2027</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.interconf-etltc.net/"  href="https://www.interconf-etltc.net/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Aizuwakamatsu, 〒 , Japan</div><div class="notes" >January 25-31, 2027</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i49" href="/registerPerson.php?c=35600&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i50" href="/registerPersonNew.php?c=35600"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Workshop on Fiber Optics in Access Networks (FOAN)">FOAN2026</abbr></td>
+			<td><div class="notes" >2026 International Workshop on Fiber Optics in Access Networks (FOAN)</div></td>
+			<td align="center"><a target="conferencepage" title="https://foan.info"  href="https://foan.info"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Pisa, Italy</div><div class="notes" >November 3-5, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i51" href="/registerPerson.php?c=34733&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i52" href="/registerPersonNew.php?c=34733"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2027 Conference on Gulf Coast - Energy, Communications & Automation (GECA)">GECA 2027</abbr></td>
+			<td><div class="notes" >2027 Conference on Gulf Coast - Energy, Communications & Automation (GECA)</div></td>
+			<td align="center"><a target="conferencepage" title="https://attend.ieee.org/geca/"  href="https://attend.ieee.org/geca/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Beaumont, TX, USA</div><div class="notes" >April 2, 2027</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i53" href="/registerPerson.php?c=35642&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i54" href="/registerPersonNew.php?c=35642"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 Humanities and Digital Transformation Conference: A Future Vision">HDTC'26</abbr></td>
+			<td><div class="notes" >2026 Humanities and Digital Transformation Conference: A Future Vision</div></td>
+			<td align="center"><a target="conferencepage" title="http://hdtc.uob.edu.bh/"  href="http://hdtc.uob.edu.bh/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Manama, Bahrain</div><div class="notes" >13-16 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i55" href="/registerPerson.php?c=35053&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i56" href="/registerPersonNew.php?c=35053"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE History of Electrotechnology Conference (HISTELCON)">HISTELCON 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE History of Electrotechnology Conference (HISTELCON)</div></td>
+			<td align="center"><a target="conferencepage" title="https://attend.ieee.org/histelcon-2026/"  href="https://attend.ieee.org/histelcon-2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kokubunji, Tokyo, Tōkyō, 〒 , Japan</div><div class="notes" >November 25-27, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i57" href="/registerPerson.php?c=35161&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i58" href="/registerPersonNew.php?c=35161"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 6th International Conference on Biomedical Engineering (IBIOMED)">IBIOMED 2026</abbr></td>
+			<td><div class="notes" >2026 6th International Conference on Biomedical Engineering (IBIOMED)</div></td>
+			<td align="center"><a target="conferencepage" title="http://ibiomed.ugm.ac.id/"  href="http://ibiomed.ugm.ac.id/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Lombok Nusa Tenggara Barat, Indonesia</div><div class="notes" >October 21-23, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i59" href="/registerPerson.php?c=34888&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i60" href="/registerPersonNew.php?c=34888"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Biomedical Instrumentation and Technology Conference (IBITeC)">IBITeC 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Biomedical Instrumentation and Technology Conference (IBITeC)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ibitec.telkomuniversity.ac.id/"  href="https://ibitec.telkomuniversity.ac.id/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Surabaya Jawa Timur, Indonesia</div><div class="notes" >November 19, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i61" href="/registerPerson.php?c=35294&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i62" href="/registerPersonNew.php?c=35294"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Conference on Aerospace Electronics and Remote Sensing Technology (ICARES)">ICARES 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Conference on Aerospace Electronics and Remote Sensing Technology (ICARES)</div></td>
+			<td align="center"><a target="conferencepage" title="https://r10.ieee.org/indonesia-grsaes/icares/"  href="https://r10.ieee.org/indonesia-grsaes/icares/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Yogyakarta, Indonesia</div><div class="notes" >4-5 November 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i63" href="/registerPerson.php?c=35281&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i64" href="/registerPersonNew.php?c=35281"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 15th International Conference on Control, Automation and Information Sciences (ICCAIS)">ICCAIS-2026</abbr></td>
+			<td><div class="notes" >2026 15th International Conference on Control, Automation and Information Sciences (ICCAIS)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ds2eldia.jp/iccais2026/"  href="https://ds2eldia.jp/iccais2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >KitaKyushu, Fukuoka, 〒 , Japan</div><div class="notes" >November 22-25, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i65" href="/registerPerson.php?c=35141&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i66" href="/registerPersonNew.php?c=35141"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 3rd International Conference on Computing and Data Analytics (ICCDA)">ICCDA 2026</abbr></td>
+			<td><div class="notes" >2026 3rd International Conference on Computing and Data Analytics (ICCDA)</div></td>
+			<td align="center"><a target="conferencepage" title="https://iccda.utas.edu.om/"  href="https://iccda.utas.edu.om/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Salalah, Oman</div><div class="notes" >November 4-5, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i67" href="/registerPerson.php?c=35074&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i68" href="/registerPersonNew.php?c=35074"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 15th International Conference on Engineering Education (ICEED)">ICEED 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 15th International Conference on Engineering Education (ICEED)</div></td>
+			<td align="center"><a target="conferencepage" title="https://enter.uitm.edu.my/iceed/"  href="https://enter.uitm.edu.my/iceed/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kanazawa, 〒 , Japan</div><div class="notes" >November 25-26, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i69" href="/registerPerson.php?c=35475&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i70" href="/registerPersonNew.php?c=35475"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 9th International Conference on Electrical, Electronics, and System Engineering (ICEESE)">ICEESE 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 9th International Conference on Electrical, Electronics, and System Engineering (ICEESE)</div></td>
+			<td align="center"><a target="conferencepage" title="https://enter.uitm.edu.my/iceese/"  href="https://enter.uitm.edu.my/iceese/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kanazawa, 〒 , Japan</div><div class="notes" >November 25-26, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i71" href="/registerPerson.php?c=35413&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i72" href="/registerPersonNew.php?c=35413"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="The 7th IEICE-CS International Conference on Emerging Technologies for Communications (IEICE ICETC 2026)">ICETC 2026</abbr></td>
+			<td><div class="notes" >The 7th IEICE-CS International Conference on Emerging Technologies for Communications (IEICE ICETC 2026)</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.ieice.org/cs/icetc/"  href="https://www.ieice.org/cs/icetc/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Taipei, Taiwan</div><div class="notes" >23-27 November 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i73" href="/registerPerson.php?c=35370&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i74" href="/registerPersonNew.php?c=35370"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 18th International Conference on Information Technology and Electrical Engineering (ICITEE)">ICITEE 2026</abbr></td>
+			<td><div class="notes" >2026 18th International Conference on Information Technology and Electrical Engineering (ICITEE)</div></td>
+			<td align="center"><a target="conferencepage" title="http://icitee.ugm.ac.id/"  href="http://icitee.ugm.ac.id/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Lombok Nusa Tenggara Barat, Indonesia</div><div class="notes" >October 21-23, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i75" href="/registerPerson.php?c=34889&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i76" href="/registerPersonNew.php?c=34889"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="The 2027 International Conference on the Leadership and Management of Projects in the Digital Age">ICLAMP2027</abbr></td>
+			<td><div class="notes" >The 2027 International Conference on the Leadership and Management of Projects in the Digital Age</div></td>
+			<td align="center"><a target="conferencepage" title="https://iclamp25.asu.edu.bh/"  href="https://iclamp25.asu.edu.bh/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Manama, Bahrain</div><div class="notes" >27-29 January 2027</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i77" href="/registerPerson.php?c=35747&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i78" href="/registerPersonNew.php?c=35747"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Conference on Computing (ICOCO)">ICOCO 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Conference on Computing (ICOCO)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ieeecomputer.my/icoco2026/"  href="https://ieeecomputer.my/icoco2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kuala Lumpur, Malaysia</div><div class="notes" >12-14 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i79" href="/registerPerson.php?c=34941&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i80" href="/registerPersonNew.php?c=34941"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Conference on Intelligent Computing and Next-Generation Technologies (ICONET)">ICONET26</abbr></td>
+			<td><div class="notes" >2026 IEEE International Conference on Intelligent Computing and Next-Generation Technologies (ICONET)</div></td>
+			<td align="center"><a target="conferencepage" title="https://events.bau.edu.lb/ICONET26/"  href="https://events.bau.edu.lb/ICONET26/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Debbieh, Lebanon</div><div class="notes" >15-16 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i81" href="/registerPerson.php?c=35152&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i82" href="/registerPersonNew.php?c=35152"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 1st International Conference on Sustainable Innovations in Engineering (ICSIE)">ICSIE'26</abbr></td>
+			<td><div class="notes" >2026 1st International Conference on Sustainable Innovations in Engineering (ICSIE)</div></td>
+			<td align="center"><a target="conferencepage" title="https://icsie.yu.edu.jo/"  href="https://icsie.yu.edu.jo/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Irbid, Jordan</div><div class="notes" >October 7-9, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i83" href="/registerPerson.php?c=34005&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i84" href="/registerPersonNew.php?c=34005"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 9th International Conference on Signal Processing and Information Security (ICSPIS)">ICSPIS'2026</abbr></td>
+			<td><div class="notes" >2026 9th International Conference on Signal Processing and Information Security (ICSPIS)</div></td>
+			<td align="center"><a target="conferencepage" title="http://icspis.com/"  href="http://icspis.com/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Dubai, United Arab Emirates</div><div class="notes" >10-14 November 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i85" href="/registerPerson.php?c=35049&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i86" href="/registerPersonNew.php?c=35049"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Conference on ICT for Smart Health">ICT4sHealth 2026</abbr></td>
+			<td><div class="notes" >2026 International Conference on ICT for Smart Health</div></td>
+			<td align="center"><a target="conferencepage" title="http://www.ict4sh.org/"  href="http://www.ict4sh.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kyoto, 〒 , Japan</div><div class="notes" >20-24 December 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i87" href="/registerPerson.php?c=35726&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i88" href="/registerPersonNew.php?c=35726"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE-EMBS Conference on Biomedical Engineering and Sciences (IECBES)">IECBES 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE-EMBS Conference on Biomedical Engineering and Sciences (IECBES)</div></td>
+			<td align="center"><a target="conferencepage" title="http://www.iecbes.org"  href="http://www.iecbes.org"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kuala Lumpur, Malaysia</div><div class="notes" >9-12 December 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i89" href="/registerPerson.php?c=34779&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i90" href="/registerPersonNew.php?c=34779"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2027 IEEE 17th Annual Computing and Communication Workshop and Conference (CCWC)">IEEE CCWC 2027</abbr></td>
+			<td><div class="notes" >2027 IEEE 17th Annual Computing and Communication Workshop and Conference (CCWC)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ieee-ccwc.org/"  href="https://ieee-ccwc.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Las Vegas, NV, USA</div><div class="notes" >January 3-6, 2027</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i91" href="/registerPerson.php?c=35657&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i92" href="/registerPersonNew.php?c=35657"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 17th Annual Information Technology, Electronics and Mobile Communication Conference (IEMCON)">IEEE IEMCON 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 17th Annual Information Technology, Electronics and Mobile Communication Conference (IEMCON)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ieee-iemcon.org/"  href="https://ieee-iemcon.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Berkeley, CA, USA</div><div class="notes" >September 30 - October 2, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i93" href="/registerPerson.php?c=35050&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i94" href="/registerPersonNew.php?c=35050"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 17th Annual Ubiquitous Computing, Electronics & Mobile Communication Conference (UEMCON)">IEEE UEMCON 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 17th Annual Ubiquitous Computing, Electronics & Mobile Communication Conference (UEMCON)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ieee-uemcon.org/"  href="https://ieee-uemcon.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >New York, NY, USA</div><div class="notes" >October 6-9, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i95" href="/registerPerson.php?c=35139&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i96" href="/registerPersonNew.php?c=35139"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Congress on Cybermatics (Cybermatics)">IEEE-Cybermatics 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Congress on Cybermatics (Cybermatics)</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.ieee-cybermatics2026.org/"  href="https://www.ieee-cybermatics2026.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Montbéliard, France</div><div class="notes" >November 30 - December 4, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i97" href="/registerPerson.php?c=35178&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i98" href="/registerPersonNew.php?c=35178"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Conference on Microelectronics (ICM)">IEEE-ICM2026</abbr></td>
+			<td><div class="notes" >2026 International Conference on Microelectronics (ICM)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ieee-icm.org/"  href="https://ieee-icm.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kuching Sarawak, Malaysia</div><div class="notes" >December 7-10, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i99" href="/registerPerson.php?c=35431&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i100" href="/registerPersonNew.php?c=35431"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="Inter Journal of Computing and Digital Systems">IJCDS</abbr></td>
+			<td><div class="notes" >Inter Journal of Computing and Digital Systems</div></td>
+			<td align="center"><a target="conferencepage" title="https://journal.uob.edu.bh/handle/123456789/12"  href="https://journal.uob.edu.bh/handle/123456789/12"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Bahrain, Bahrain</div><div class="notes" >January 29, 2027</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i101" href="/registerPerson.php?c=26939&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i102" href="/registerPersonNew.php?c=26939"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Microwave and Antenna Symposium (IMAS)">IMAS-2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Microwave and Antenna Symposium (IMAS)</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.imas-ieee.org/"  href="https://www.imas-ieee.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Jeddah, Saudi Arabia</div><div class="notes" >19-22 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i103" href="/registerPerson.php?c=34923&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i104" href="/registerPersonNew.php?c=34923"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Conference on Multidisciplinary Healthcare Technologies and Biomedical Engineering (IMTECH-BME)">IMTECH-BME 2026</abbr></td>
+			<td><div class="notes" >2026 International Conference on Multidisciplinary Healthcare Technologies and Biomedical Engineering (IMTECH-BME)</div></td>
+			<td align="center"><a target="conferencepage" title="https://imtechconfe.com"  href="https://imtechconfe.com"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Bandung Jawa Barat, Indonesia</div><div class="notes" >September 28-29, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i105" href="/registerPerson.php?c=35005&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i106" href="/registerPersonNew.php?c=35005"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Conference on Internet of Things and Intelligence Systems (IoTaIS)">IoTaIS 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Conference on Internet of Things and Intelligence Systems (IoTaIS)</div></td>
+			<td align="center"><a target="conferencepage" title="http://iotais.org/"  href="http://iotais.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Bali, Indonesia</div><div class="notes" >5-7 November 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i107" href="/registerPerson.php?c=34817&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i108" href="/registerPersonNew.php?c=34817"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="The 6th International Conference on Intelligent Systems and Pattern Recognition 2026">ISPR'2026</abbr></td>
+			<td><div class="notes" >The 6th International Conference on Intelligent Systems and Pattern Recognition 2026</div></td>
+			<td align="center"><a target="conferencepage" title="https://ispr2026.sciencesconf.org/"  href="https://ispr2026.sciencesconf.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Istambul, Turkey</div><div class="notes" >December 20-22, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i109" href="/registerPerson.php?c=35643&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i110" href="/registerPersonNew.php?c=35643"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 8th International Symposium on Telecommunication Technologies (ISTT)">ISTT2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 8th International Symposium on Telecommunication Technologies (ISTT)</div></td>
+			<td align="center"><a target="conferencepage" title="https://istt2026.mycomvt.info/"  href="https://istt2026.mycomvt.info/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kuala Lumpur, Malaysia</div><div class="notes" >14-15 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i111" href="/registerPerson.php?c=34575&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i112" href="/registerPersonNew.php?c=34575"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 12th Information Technology International Seminar (ITIS)">ITIS 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 12th Information Technology International Seminar (ITIS)</div></td>
+			<td align="center"><a target="conferencepage" title="https://2026.itisconf.org/"  href="https://2026.itisconf.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Denpasar Bali, Indonesia</div><div class="notes" >14-16 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i113" href="/registerPerson.php?c=35255&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i114" href="/registerPersonNew.php?c=35255"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 36th International Telecommunication Networks and Applications Conference (ITNAC)">ITNAC 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 36th International Telecommunication Networks and Applications Conference (ITNAC)</div></td>
+			<td align="center"><a target="conferencepage" title="https://itnac.org.au/"  href="https://itnac.org.au/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Melbourne VIC, Australia</div><div class="notes" >25-27 November 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i115" href="/registerPerson.php?c=34756&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i116" href="/registerPersonNew.php?c=34756"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Workshop on Wireless Sensing Technologies and Applications (IWSA)">IWSA 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Workshop on Wireless Sensing Technologies and Applications (IWSA)</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.apmtt.org/iwsa2026"  href="https://www.apmtt.org/iwsa2026"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >San Sebastián, Spain</div><div class="notes" >21-23 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i117" href="/registerPerson.php?c=35291&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i118" href="/registerPersonNew.php?c=35291"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="The 32nd IEEE International Conference on Mechatronics and Machine Vision in Practice (M2VIP 2026)">M2VIP 2026</abbr></td>
+			<td><div class="notes" >The 32nd IEEE International Conference on Mechatronics and Machine Vision in Practice (M2VIP 2026)</div></td>
+			<td align="center"><a target="conferencepage" title="https://ieee-m2vip.cc"  href="https://ieee-m2vip.cc"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Nanjing, China</div><div class="notes" >November 20-23, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i119" href="/registerPerson.php?c=35103&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i120" href="/registerPersonNew.php?c=35103"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="International Conference on Mechatronics, Energy, and Biomedical Systems 2026">MEBS 2026</abbr></td>
+			<td><div class="notes" >International Conference on Mechatronics, Energy, and Biomedical Systems 2026</div></td>
+			<td align="center"><a target="conferencepage" title="https://mebs.ajtpress.com/"  href="https://mebs.ajtpress.com/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Bandung, Indonesia</div><div class="notes" >November 19-22, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i121" href="/registerPerson.php?c=35290&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i122" href="/registerPersonNew.php?c=35290"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 International Near East Conference on Electrical & Energy Systems (NEECON)">NEECON'2026</abbr></td>
+			<td><div class="notes" >2026 International Near East Conference on Electrical & Energy Systems (NEECON)</div></td>
+			<td align="center"><a target="conferencepage" title="https://neecon.org/"  href="https://neecon.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Dubai, United Arab Emirates</div><div class="notes" >October 21-25, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i123" href="/registerPerson.php?c=35211&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i124" href="/registerPersonNew.php?c=35211"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 Next Generation Communications (NextGCom)">NextGCom'2026</abbr></td>
+			<td><div class="notes" >2026 Next Generation Communications (NextGCom)</div></td>
+			<td align="center"><a target="conferencepage" title="https://nextgcom.net/"  href="https://nextgcom.net/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Argostoli, Greece</div><div class="notes" >September 28-30, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i125" href="/registerPerson.php?c=35448&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i126" href="/registerPersonNew.php?c=35448"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 8th Novel Intelligent and Leading Emerging Sciences Conference (NILES)">NILES2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 8th Novel Intelligent and Leading Emerging Sciences Conference (NILES)</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.nilesconf.org"  href="https://www.nilesconf.org"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >giza, Egypt</div><div class="notes" >October 22-26, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i127" href="/registerPerson.php?c=35017&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i128" href="/registerPersonNew.php?c=35017"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Conference on Power System Technology (PowerCon)">PowerCon2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Conference on Power System Technology (PowerCon)</div></td>
+			<td align="center"><a target="conferencepage" title="https://attend.ieee.org/powercon-2026/"  href="https://attend.ieee.org/powercon-2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Kota Kinabalu, Malaysia</div><div class="notes" >October 11-14, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i129" href="/registerPerson.php?c=34182&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i130" href="/registerPersonNew.php?c=34182"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 39th International System-on-Chip Conference (SOCC)">SOCC 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 39th International System-on-Chip Conference (SOCC)</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.ieee-socc.org"  href="https://www.ieee-socc.org"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Heidelberg, Germany</div><div class="notes" >30 September - 2 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i131" href="/registerPerson.php?c=34953&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i132" href="/registerPersonNew.php?c=34953"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE International Conference on Technology, Informatics, Management, Engineering and Environment (TIME-E)">TIME-E 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE International Conference on Technology, Informatics, Management, Engineering and Environment (TIME-E)</div></td>
+			<td align="center"><a target="conferencepage" title="https://tim2e.org/"  href="https://tim2e.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Bali Bali, Indonesia</div><div class="notes" >November 11-13, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i133" href="/registerPerson.php?c=35430&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i134" href="/registerPersonNew.php?c=35430"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 13th International Conference on Wireless Networks and Mobile Communications (WINCOM)">WINCOM'26</abbr></td>
+			<td><div class="notes" >2026 13th International Conference on Wireless Networks and Mobile Communications (WINCOM)</div></td>
+			<td align="center"><a target="conferencepage" title="https://www.wincom-conf.org/WINCOM_2026/"  href="https://www.wincom-conf.org/WINCOM_2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Tangier, Morocco</div><div class="notes" >October 21-24, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i135" href="/registerPerson.php?c=34774&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i136" href="/registerPersonNew.php?c=34774"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="2026 IEEE 13th Workshop on Wide Bandgap Power Devices and Applications (WiPDA)">WiPDA 2026</abbr></td>
+			<td><div class="notes" >2026 IEEE 13th Workshop on Wide Bandgap Power Devices and Applications (WiPDA)</div></td>
+			<td align="center"><a target="conferencepage" title="https://wipda.org/"  href="https://wipda.org/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Burlington, VT, USA</div><div class="notes" >October 26-28, 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i137" href="/registerPerson.php?c=35472&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i138" href="/registerPersonNew.php?c=35472"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+		<tr>
+			<td><abbr title="KuVS Fachgespräch - Würzburg Workshop on Networking and Computing in the 6G Era 2026">WueWoWAS'26</abbr></td>
+			<td><div class="notes" >KuVS Fachgespräch - Würzburg Workshop on Networking and Computing in the 6G Era 2026</div></td>
+			<td align="center"><a target="conferencepage" title="https://lsinfo3.github.io/WueWoWAS2026/"  href="https://lsinfo3.github.io/WueWoWAS2026/"><img src="icon/external.png"></a></td>
+			<td><div class="notes" >Würzburg, Germany</div><div class="notes" >28 September - 1 October 2026</div></td>
+			<td align="center"><a title="Register for conference" target="_self" id="i139" href="/registerPerson.php?c=35062&amp;p=1000000"><span  class="fa-regular fa-ticket"></span></a></td>
+			<td align="center"><a title="Register others for conference" target="_self" id="i140" href="/registerPersonNew.php?c=35062"><span  class="fa-regular fa-ticket"></span></a></td>
+		</tr>
+	</tbody>
+</table>
+<p ><a title="RSS feed for conferences" target="_self" id="i141" href="/rssConferences.php"><span  class="fa-regular fa-rss-square"></span></a></p>
+
+  </div>
+  <div class='footer' id='footer'>
+  <a title='EDAS documentation' href='https://edas.info/doc/'>EDAS</a> at alpha (<a title="Current time in different time zone" target="_self" href="/time.php">Wed, 23 Sep 2026 14:17:31 +0800 PST</a>) [User 1000000 at 122.55.200.115 arNu-y9dR1WFY3_STEe3hAAAAAc]
+   <a title="Request help" target="_self" href="/submitError.php?query=L2xpc3RDb25mZXJlbmNlc1JlZ2lzdGVyLnBocA%3D%3D&amp;m=0">Request help</a>
+  </div>
+  </body>
+</html>

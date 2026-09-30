@@ -1,0 +1,397 @@
+{
+ "statusType": "OK",
+ "entity": {
+  "totalResults": 1904,
+  "results": [
+   {
+    "eventId": 70095,
+    "eventTitle": "2026 International Conference on Secure IoT and Cybersecurity (ICOSICS)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
+    "about": "Communication, Networking and Broadcast Technologies; Computing and Processing",
+    "location": {
+     "city": "Bengaluru",
+     "region": "",
+     "country": "India"
+    },
+    "sponsors": "IEEE Systems, Man, and Cybernetics Society; RV College of Engineering",
+    "url": "/conf/details?id=70095",
+    "isvirtual": "Y",
+    "eventFormat": "hybrid"
+   },
+   {
+    "eventId": 70267,
+    "eventTitle": "2026 4th Conference on Intelligent Systems and Information Technologies. Cybersecurity in the Age of AI: Emerging Threats and Strategic Opportunities (CISIT)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
+    "about": "Bioengineering; Computing and Processing; Power, Energy and Industry Applications; Robotics and Control Systems; Signal Processing and Analysis",
+    "location": {
+     "city": "Siedlce, Masovian",
+     "region": "",
+     "country": "Poland"
+    },
+    "sponsors": "Poland Section C Chapter; University in Siedlce",
+    "url": "/conf/details?id=70267",
+    "isvirtual": "Y",
+    "eventFormat": "hybrid"
+   },
+   {
+    "eventId": 70405,
+    "eventTitle": "2026 IEEE Central America and Panama Student Conference (CONESCAPAN)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
+    "about": "Aerospace; Bioengineering; Communication, Networking and Broadcast Technologies; Components, Circuits, Devices and Systems; Computing and Processing; Engineered Materials, Dielectrics and Plasmas; Engineering Profession; General Topics for Engineers; Nuclear Engineering; Photonics and Electrooptics; Power, Energy and Industry Applications; Robotics and Control Systems; Signal Processing and Analysis; Transportation",
+    "location": {
+     "city": "San Jos\u00e9",
+     "region": "",
+     "country": "Costa Rica"
+    },
+    "sponsors": "Costa Rica Section; Costa Rica Section C Chapter; Costa Rica Section CAS Chapter; Costa Rica Section COM/CS Jt Chapter; Costa Rica Section ED Chapter; Costa Rica Section EMB Chapter; Costa Rica Section PE Chapter; Costa Rica Section SP Chapter",
+    "url": "/conf/details?id=70405",
+    "isvirtual": "N",
+    "eventFormat": "inperson"
+   },
+   {
+    "eventId": 70646,
+    "eventTitle": "2026 IEEE International Workshop on Metrology for Green Technologies, Renewable Energy and Ecological Sustainability (MetroGREENST)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
+    "about": "Communication, Networking and Broadcast Technologies; Components, Circuits, Devices and Systems; Computing and Processing; Engineering Profession; General Topics for Engineers; Power, Energy and Industry Applications; Robotics and Control Systems; Signal Processing and Analysis; Transportation",
+    "location": {
+     "city": "Siena",
+     "region": "",
+     "country": "Italy"
+    },
+    "sponsors": "Bulgaria Section; CeRICT scrl Regional Center Information Communication Technology; IEEE Instrumentation and Measurement Society; Italy Section; Italy Section IM Chapter; Italy Section SEN Chapter; Italy Section YP Affinity Group",
+    "url": "/conf/details?id=70646",
+    "isvirtual": "N",
+    "eventFormat": "inperson"
+   },
+   {
+    "eventId": 70690,
+    "eventTitle": "2026 IEEE Conference on AgriFood Electronics (CAFE)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
+    "about": "Components, Circuits, Devices and Systems; Fields, Waves and Electromagnetics; Power, Energy and Industry Applications; Robotics and Control Systems; Signal Processing and Analysis",
+    "location": {
+     "city": "Cagliari",
+     "region": "",
+     "country": "Italy"
+    },
+    "sponsors": "IEEE Circuits and Systems Society; IEEE Council on RFID; IEEE Instrumentation and Measurement Society; IEEE Sensors Council; IEEE Society on Social Implications of Technology; IEEE Solid-State Circuits Society",
+    "url": "/conf/details?id=70690",
+    "isvirtual": "N",
+    "eventFormat": "inperson"
+   },
+   {
+    "eventId": 70898,
+    "eventTitle": "2026 International Conference on Futuristic Technologies in Control Systems & Renewable Energy (ICFCR)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-24",
+    "about": "Bioengineering; Components, Circuits, Devices and Systems; Computing and Processing; Power, Energy and Industry Applications; Robotics and Control Systems; Signal Processing and Analysis; Transportation",
+    "location": {
+     "city": "Kuttippuram",
+     "region": "",
+     "country": "India"
+    },
+    "sponsors": "Kerala Section; MES College of Engineering - Kuttippuram",
+    "url": "/conf/details?id=70898",
+    "isvirtual": "N",
+    "eventFormat": "inperson"
+   },
+   {
+    "eventId": 71273,
+    "eventTitle": "2026 14th International Conference on Awareness Science and Technology (iCAST)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
+    "about": "Communication, Networking and Broadcast Technologies; Computing and Processing; Robotics and Control Systems; Signal Processing and Analysis",
+    "location": {
+     "city": "Qingdao",
+     "region": "",
+     "country": "China"
+    },
+    "sponsors": "IEEE Systems, Man, and Cybernetics Society; Ocean University of China",
+    "url": "/conf/details?id=71273",
+    "isvirtual": "Y",
+    "eventFormat": "hybrid"
+   },
+   {
+    "eventId": 71351,
+    "eventTitle": "2026 IEEE 24th International Symposium on Intelligent Systems and Informatics (SISY)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
+    "about": "Bioengineering; Communication, Networking and Broadcast Technologies; Computing and Processing; Engineering Profession; General Topics for Engineers; Robotics and Control Systems",
+    "location": {
+     "city": "Pula",
+     "region": "",
+     "country": "Croatia"
+    },
+    "sponsors": "Hungary Section; Hungary Section CS Chapter; Hungary Section IE/RA Joint Chapter; Hungary Section SMC Chapter; IEEE Systems, Man, and Cybernetics Society",
+    "url": "/conf/details?id=71351",
+    "isvirtual": "N",
+    "eventFormat": "inperson"
+   },
+   {
+    "eventId": 71828,
+    "eventTitle": "2026 Systems and Technologies of Digital HealthCare (STDH)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-25",
+    "about": "Bioengineering; Components, Circuits, Devices and Systems; Computing and Processing; Fields, Waves and Electromagnetics; Signal Processing and Analysis",
+    "location": {
+     "city": "Saint Petersburg",
+     "region": "",
+     "country": "Russia"
+    },
+    "sponsors": "Russia (Northwest) Section; St. Petersburg Electrotechnical University - LETI",
+    "url": "/conf/details?id=71828",
+    "isvirtual": "Y",
+    "eventFormat": "hybrid"
+   },
+   {
+    "eventId": 71998,
+    "eventTitle": "2026 IEEE International Conference of Computer Science and Information Technology (ICOSNIKOM)",
+    "startDate": "2026-09-23",
+    "endDate": "2026-09-24",
+    "about": "Bioengineering; Communication, Networking and Broadcast Technologies; Computing and Processing; Fields, Waves and Electromagnetics; Power, Energy and Industry Applications; Robotics and Control Systems; Signal Processing and Analysis",
+    "location": {
+     "city": "Medan",
+     "region": "",
+     "country": "Indonesia"
+    },
+    "sponsors": "Indonesia Section; Indonesia Section CSS/RAS Joint Chapter; Universitas Prima Indonesia",
+    "url": "/conf/details?id=71998",
+    "isvirtual": "Y",
+    "eventFormat": "hybrid"
+   }
+  ],
+  "returnOffset": 0,
+  "resultFacets": [
+   {
+    "facetName": "isvirtual",
+    "facetValue": null,
+    "facetSize": null,
+    "facetType": null,
+    "facetExpr": null,
+    "bucketValues": null,
+    "facetBuckets": {
+     "Y": 907,
+     "N": 997
+    }
+   },
+   {
+    "facetName": "conf_dates",
+    "facetValue": null,
+    "facetSize": null,
+    "facetType": null,
+    "facetExpr": null,
+    "bucketValues": null,
+    "facetBuckets": {
+     "['2026-09-17T00:00:00Z','2026-09-18T00:00:00Z']": 0,
+     "['2026-09-17T00:00:00Z','2026-10-17T00:00:00Z']": 255,
+     "['2026-09-17T00:00:00Z','2027-03-17T00:00:00Z']": 1349
+    }
+   },
+   {
+    "facetName": "isdisplayextconfsearchui",
+    "facetValue": null,
+    "facetSize": null,
+    "facetType": null,
+    "facetExpr": null,
+    "bucketValues": null,
+    "facetBuckets": {
+     "Y": 1904
+    }
+   },
+   {
+    "facetName": "sponsor_types_desc",
+    "facetValue": null,
+    "facetSize": null,
+    "facetType": null,
+    "facetExpr": null,
+    "bucketValues": null,
+    "facetBuckets": {
+     "geo": 944,
+     "soc": 1068,
+     "misc": 30
+    }
+   },
+   {
+    "facetName": "eventformat",
+    "facetValue": null,
+    "facetSize": null,
+    "facetType": null,
+    "facetExpr": null,
+    "bucketValues": null,
+    "facetBuckets": {
+     "virtual": 16,
+     "hybrid": 891,
+     "inperson": 997
+    }
+   },
+   {
+    "facetName": "field_of_interest",
+    "facetValue": null,
+    "facetSize": null,
+    "facetType": null,
+    "facetExpr": null,
+    "bucketValues": null,
+    "facetBuckets": {
+     "Bioengineering": 359,
+     "Communication, Networking and Broadcast Technologies": 1062,
+     "Engineered Materials, Dielectrics and Plasmas": 296,
+     "Nuclear Engineering": 90,
+     "Computing and Processing": 1336,
+     "Transportation": 361,
+     "Geoscience": 98,
+     "Robotics and Control Systems": 892,
+     "Signal Processing and Analysis": 944,
+     "Components, Circuits, Devices and Systems": 854,
+     "Aerospace": 241,
+     "Engineering Profession": 463,
+     "Fields, Waves and Electromagnetics": 375,
+     "General Topics for Engineers": 501,
+     "Photonics and Electrooptics": 293,
+     "Power, Energy and Industry Applications": 789
+    }
+   },
+   {
+    "facetName": "conf_country",
+    "facetValue": null,
+    "facetSize": null,
+    "facetType": null,
+    "facetExpr": null,
+    "bucketValues": null,
+    "facetBuckets": {
+     "Kazakhstan": 5,
+     "Portugal": 28,
+     "Greece": 9,
+     "Latvia": 2,
+     "Iran": 9,
+     "Morocco": 6,
+     "Panama": 4,
+     "Guatemala": 1,
+     "Chile": 6,
+     "Laos": 1,
+     "Nepal": 5,
+     "Argentina": 2,
+     "Ukraine": 14,
+     "Ghana": 2,
+     "Bahrain": 3,
+     "India": 292,
+     "Canada": 35,
+     "Maldives": 1,
+     "Belgium": 2,
+     "Taiwan": 15,
+     "Finland": 2,
+     "South Africa": 7,
+     "Georgia": 1,
+     "Jamaica": 2,
+     "Peru": 3,
+     "Germany": 28,
+     "Yemen": 1,
+     "Hong Kong": 8,
+     "Thailand": 33,
+     "Costa Rica": 3,
+     "Vietnam": 16,
+     "Sweden": 3,
+     "Poland": 2,
+     "Jordan": 9,
+     "Bulgaria": 5,
+     "Nigeria": 2,
+     "Kuwait": 1,
+     "Tunisia": 14,
+     "Croatia": 4,
+     "USA": 306,
+     "Sri Lanka": 8,
+     "Uruguay": 1,
+     "United Kingdom": 20,
+     "United Arab Emirates": 14,
+     "Switzerland": 1,
+     "Spain": 34,
+     "Palestine": 1,
+     "Lebanon": 3,
+     "Azerbaijan": 1,
+     "Czech Republic": 7,
+     "Burkina Faso": 1,
+     "Australia": 37,
+     "Estonia": 2,
+     "Myanmar": 1,
+     "Cyprus": 8,
+     "Malaysia": 34,
+     "Oman": 6,
+     "Iceland": 2,
+     "Austria": 5,
+     "Korea (South)": 23,
+     "Luxembourg": 1,
+     "Brazil": 14,
+     "Algeria": 9,
+     "Slovenia": 1,
+     "Colombia": 6,
+     "Ecuador": 2,
+     "Hungary": 4,
+     "Japan": 78,
+     "Mauritius": 1,
+     "New Zealand": 5,
+     "Senegal": 2,
+     "Italy": 58,
+     "Macedonia": 1,
+     "Ethiopia": 1,
+     "Singapore": 24,
+     "Egypt": 14,
+     "Bolivia": 2,
+     "Russia": 16,
+     "Malta": 1,
+     "Saudi Arabia": 9,
+     "Netherlands": 6,
+     "Pakistan": 13,
+     "China": 334,
+     "Ireland": 4,
+     "Qatar": 2,
+     "Slovakia": 5,
+     "France": 39,
+     "Serbia": 1,
+     "Bosnia and Herzegovina": 3,
+     "Romania": 12,
+     "Philippines": 3,
+     "Uzbekistan": 3,
+     "Turkiye": 12,
+     "Bangladesh": 15,
+     "Norway": 5,
+     "Denmark": 3,
+     "Mexico": 8,
+     "Zimbabwe": 1,
+     "Montenegro": 1,
+     "Indonesia": 68
+    }
+   },
+   {
+    "facetName": "conf_region",
+    "facetValue": null,
+    "facetSize": null,
+    "facetType": null,
+    "facetExpr": null,
+    "bucketValues": null,
+    "facetBuckets": {
+     "Region04-Central USA": 17,
+     "Region10-Asia and Pacific": 1014,
+     "Region07-Canada": 36,
+     "Region03-Southeastern USA": 37,
+     "Region02-Eastern USA": 20,
+     "Region09-Latin America": 54,
+     "Region06-Western USA": 129,
+     "Region08-Europe,Middle East,Africa": 479,
+     "Region01-Northeast USA": 37,
+     "Region05-Southwestern USA": 65
+    }
+   }
+  ],
+  "searchStatus": "{Timems: 3,Rid: pOu8+Iw0n905CtQTlg==}",
+  "searchStr": "*",
+  "pagination": false,
+  "pageSize": 10,
+  "sortOrder": "ASC"
+ },
+ "entityType": "org.ieee.conf.data.aws.search.model.EventResults",
+ "status": 200,
+ "metadata": {}
+}

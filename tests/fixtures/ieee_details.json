@@ -1,0 +1,33 @@
+{
+ "statusType": "OK",
+ "entity": {
+  "searchStatus": "{Timems: 0,Rid: kJugmI00mu06CtQTlg==}",
+  "event": null,
+  "eventDetail": {
+   "eventId": 71606,
+   "eventTitle": "2026 International Conference On Computing, Communication and Mobile N/Ws (ICCMN)",
+   "startDate": "2026-10-23",
+   "endDate": "2026-10-24",
+   "about": "Communication, Networking and Broadcast Technologies; Components, Circuits, Devices and Systems; Computing and Processing; Engineered Materials, Dielectrics and Plasmas; Power, Energy and Industry Applications; Robotics and Control Systems; Signal Processing and Analysis",
+   "location": {
+    "city": "BELAGAVI",
+    "region": "",
+    "country": "India"
+   },
+   "sponsors": "Bangalore Section; Bangalore Section CIS Chapter; Jain College of Engineering and Research; North Karnataka Subsection",
+   "keywords": "IEEE ICCMN,CONFERENCE ON CUMMUNICATION AND NEYWORK,IEEE BANGALORE SECTION CONFERENCE,",
+   "scope": "COMPUTER SCIENCE, COMMUNICATION ENGINEERING, INFORMATION TECHNOLOGY , ANTENNA",
+   "callForPapers": "2026-05-05",
+   "url": "iccmn.in/",
+   "eventContact": "jcer.principal@gmail.com",
+   "sponsorTypes": "3; 5; 5; 9",
+   "venues": "JGI - Jain College Of Engineering And Research, 682/2, 683/2A, Udyambag, Angol, , , ,  Belagavi, Karnataka , , India, 590008, ;",
+   "region": "Region10-Asia and Pacific",
+   "isvirtual": "N",
+   "eventFormat": "inperson"
+  }
+ },
+ "entityType": "org.ieee.conf.data.aws.search.model.EventResult",
+ "status": 200,
+ "metadata": {}
+}
