@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     # Postgres schema holding the tables. The public server reads Supabase's private copy
     # (scripts/copy_to_supabase.py): DATABASE_SCHEMA=scraper. Unset = the default schema.
     database_schema: str | None = None
+    # Keys that may call the API (app/api/auth.py), as JSON: API_KEYS='["key1", "key2"]'.
+    # Several, so a key can be replaced without cutting anyone off. Empty = no check.
+    api_keys: list[SecretStr] = []
 
     # The public website (web/, Next.js on Vercel) reads Supabase; scripts/sync_supabase.py
     # fills it. The connection string holds the database password: .env only, never printed.

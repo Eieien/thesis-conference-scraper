@@ -1,58 +1,78 @@
 # Conference API: guide for the frontend
 
-A read-only API over the conferences we collected: CS and tech conferences **starting 1 Oct 2026
-to 31 Mar 2027**, focused on **Asia**, with registration fees, deadlines, online attendance and
-publication history.
+A read-only API over computer science and technology conferences **starting 1 Oct 2026 to
+31 Mar 2027**, focused on **Asia** (about 1,400 conferences, 800 of them with fees). For each
+conference: dates, location, deadlines, registration fees (with USD and PHP conversions), online
+attendance and publication history.
 
-- **Base URL (public):** `https://conference-scraper-api.dcism.org` (local development:
-  `http://127.0.0.1:8080`)
-- **Interactive reference:** `https://conference-scraper-api.dcism.org/docs` lists every
-  endpoint and field, and lets you try requests in the browser.
-- **Format:** JSON. Dates are `YYYY-MM-DD` strings. Missing values are `null`, never left out.
-- **No authentication.**
-- **CORS:** you can call the API straight from the browser when your app runs on `localhost` or
-  `127.0.0.1` (any port). For a deployed frontend, send us its address (e.g.
-  `https://conferences.example.com`) and we will add it. Only `GET` requests are allowed.
-
-You only need the endpoints in this guide. The others (`/pipeline/*`, `/sources/*`, `/tools/*`)
-run the scraper and are for us.
-
----
-
-## Endpoints at a glance
-
-| What you want | Request |
+|  |  |
 |---|---|
-| The list of conferences | `GET /conferences?continent=Asia&compact=true&limit=5000` |
-| One conference, with every fee | `GET /conferences/{id}` |
-| Counts for filter chips and headers | `GET /summary` |
-| A spreadsheet download | `GET /conferences/export?fmt=xlsx` |
-| Is the API up? | `GET /health` |
+| **Base URL** | `https://conference-scraper-api.dcism.org` |
+| **Authentication** | Every request needs the header `X-API-Key: <your key>`. We send the key separately. |
+| **Methods** | `GET` only |
+| **Format** | JSON. Dates are `YYYY-MM-DD`. Missing values are `null`, never left out. |
+| **Try it in the browser** | `https://conference-scraper-api.dcism.org/docs`, click **Authorize**, paste the key |
 
 ---
 
-## 1. List conferences: `GET /conferences`
+## Quick start
+
+```bash
+curl -H "X-API-Key: YOUR_KEY" \
+  "https://conference-scraper-api.dcism.org/conferences?continent=Asia&compact=true&limit=5000"
+```
+
+```js
+const API = "https://conference-scraper-api.dcism.org";
+const KEY = process.env.CONFERENCE_API_KEY; // keep it out of the repository
+
+async function api(path) {
+  const res = await fetch(API + path, { headers: { "X-API-Key": KEY } });
+  if (!res.ok) throw new Error(`${res.status}: ${(await res.json()).detail}`);
+  return res.json();
+}
+
+const conferences = await api("/conferences?continent=Asia&compact=true&limit=5000");
+```
+
+---
+
+## Endpoints
+
+| You want | Request | Key needed |
+|---|---|---|
+| The list of conferences | `GET /conferences` | yes |
+| One conference with all its fees | `GET /conferences/{id}` | yes |
+| Counts (for filter chips and headings) | `GET /summary` | yes |
+| A CSV or Excel download | `GET /conferences/export` | yes |
+| Is the API up? | `GET /health` | no |
+
+---
+
+## 1. `GET /conferences`: the list
 
 Returns an array of conferences, sorted by start date.
 
-**Always send `compact=true` for lists.** It leaves out the two long fields (`description` and
-`field_sources`), which keeps the whole Asian list to roughly 100 KB over the wire.
+**Send `compact=true` for lists.** It leaves out the two long fields (`description`,
+`field_sources`) that a list doesn't show. All of Asia is then about 100 KB.
 
-### Filters (all optional, combine freely)
+### Query parameters (all optional)
 
 | Parameter | Example | Meaning |
 |---|---|---|
-| `continent` | `Asia` | One of `Asia`, `Europe`, `North America`, `South America`, `Africa`, `Oceania`, or `Unknown` |
-| `has_fees` | `true` | Only conferences with fees (`false`: only those without) |
-| `source` | `ieee` | Only conferences found on this site: `ieee`, `wikicfp`, `easychair`, `conferenceindex`, `edas`, `ieeecs` |
-| `starts_from`, `starts_to` | `2026-11-01` | Conference start date in this range (inclusive) |
-| `abstract_from`, `abstract_to` | `2026-09-30` | Abstract deadline in this range (inclusive) |
+| `continent` | `Asia` | `Asia`, `Europe`, `North America`, `South America`, `Africa`, `Oceania` or `Unknown`. Leave out for every continent. |
+| `has_fees` | `true` | `true`: only conferences with fees. `false`: only those without. |
+| `starts_from`, `starts_to` | `2026-11-01` | Start date within this range (inclusive) |
+| `abstract_from`, `abstract_to` | `2026-10-17` | Abstract deadline within this range (inclusive) |
 | `has_abstract` | `true` | Only conferences that list an abstract deadline |
-| `limit`, `offset` | `5000`, `0` | Paging. `limit` is at most 5000; all of Asia (about 1,400) fits in one call |
+| `source` | `ieee` | Only conferences found on this site: `ieee`, `wikicfp`, `easychair`, `conferenceindex`, `edas`, `ieeecs` |
+| `status` | `enriched` | `enriched`, `needs_review` or `collected` (see "Fee status" below) |
+| `compact` | `true` | Leave out the long text fields. Default `false`. |
+| `limit` | `5000` | Rows per call. Default **100**, maximum 5000. |
+| `offset` | `0` | Rows to skip, for paging |
 
-Search, sorting by fee, and the history and online filters are not API parameters. Load the list
-once (it is small with `compact=true`) and filter it in the browser. That is what our dashboard
-does.
+There is no search, sort or free-text parameter. Load the list once (one call with
+`limit=5000` covers all of Asia) and search, sort and filter in the browser.
 
 ### Examples
 
@@ -60,57 +80,61 @@ does.
 # All Asian conferences
 GET /conferences?continent=Asia&compact=true&limit=5000
 
-# Abstract deadline not passed yet (use today's date)
-GET /conferences?continent=Asia&compact=true&limit=5000&abstract_from=2026-09-30
+# Abstract deadline not passed yet (use the user's local date)
+GET /conferences?continent=Asia&compact=true&limit=5000&abstract_from=2026-10-17
 
-# Conferences starting in the first half of November, with fees
+# Starting in the first half of November, with fees
 GET /conferences?continent=Asia&compact=true&has_fees=true&starts_from=2026-11-01&starts_to=2026-11-15
 ```
 
-### One row, real example
+### One row (real data)
 
 ```json
 {
-  "id": 658,
-  "acronym": "TSSA",
-  "name": "2026 20th International Conference on Telecommunication Systems, Services, and Applications (TSSA)",
-  "start_date": "2026-10-01",
-  "end_date": "2026-10-02",
-  "city": "Yogyakarta",
-  "country": "Indonesia",
+  "id": 975,
+  "acronym": "PCDS",
+  "name": "2026 3rd International Symposium on Parallel Computing and Distributed Systems (PCDS)",
+  "start_date": "2026-11-16",
+  "end_date": "2026-11-18",
+  "city": "Singapore",
+  "country": "Singapore",
   "continent": "Asia",
 
   "abstract_deadline": null,
-  "paper_deadline": "2026-08-21",
-  "notification_date": "2026-08-31",
-  "camera_ready_deadline": "2026-09-14",
-  "registration_deadline": "2026-09-14",
+  "paper_deadline": "2026-09-27",
+  "notification_date": "2026-10-11",
+  "camera_ready_deadline": null,
+  "registration_deadline": "2026-10-18",
 
-  "homepage": "https://tssa-conference.org/2026/",
-  "registration_url": "https://tssa-conference.org/2026/registration/",
+  "homepage": "https://pcds.cc/",
+  "registration_url": "https://pcds.cc/reg.html",
 
   "standard_fee": {
-    "amount": 600.0, "currency": "USD",
-    "category": "International Participant Non IEEE Member", "tier": null,
-    "amount_usd": 600.0, "amount_php": 37499.88
+    "amount": 500.0, "currency": "USD", "category": "Regular Author", "tier": null,
+    "amount_usd": 500.0, "amount_php": 31542.15
   },
   "student_fee": {
-    "amount": 350.0, "currency": "USD",
-    "category": "International Participant Student IEEE Member", "tier": null,
-    "amount_usd": 350.0, "amount_php": 21874.93
+    "amount": 450.0, "currency": "USD", "category": "Student Author", "tier": null,
+    "amount_usd": 450.0, "amount_php": 28387.93
   },
-  "fee_min": 350.0, "fee_max": 600.0, "currency": "USD",
-  "fee_min_usd": 350.0, "fee_max_usd": 600.0,
-  "fee_min_php": 21874.93, "fee_max_php": 37499.88,
+  "fee_min": 50.0, "fee_max": 500.0, "currency": "USD",
+  "fee_min_usd": 50.0, "fee_max_usd": 500.0,
+  "fee_min_php": 3154.21, "fee_max_php": 31542.15,
 
   "online": "online option",
+  "attendance": {
+    "mode": "online option",
+    "evidence": [{ "source": "ieee", "says": "hybrid", "text": "IEEE lists the format as hybrid" }],
+    "url": "https://pcds.cc/",
+    "checked_at": "2026-09-29T12:57:52+00:00"
+  },
   "history_label": "has history",
-  "history_years": [2025, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2014],
+  "history_years": [2025, 2024],
   "organizer_flag": null,
 
   "status": "enriched",
   "review_note": null,
-  "sources": ["easychair", "ieee"]
+  "sources": ["ieee"]
 }
 ```
 
@@ -118,160 +142,203 @@ GET /conferences?continent=Asia&compact=true&has_fees=true&starts_from=2026-11-0
 
 ## 2. What the fields mean
 
-### Fees: what to show
+### Fees
 
-| Field | Show it as |
+| Field | Use it for |
 |---|---|
-| `standard_fee` | **The headline price.** What a regular, non-member, international author pays to attend in person. `null` when no fee fits. |
+| `standard_fee` | **The headline price**: what a regular, non-member, international author pays to attend in person. `null` when no fee fits. |
 | `student_fee` | The lowest student author rate open to international participants. `null` when none is listed. |
-| `fee_min`, `fee_max`, `currency` | The range of all verified fees, in the original currency. |
-| `..._usd`, `..._php` | The same amounts converted to US dollars and Philippine pesos at today's rate. `null` when the currency can't be converted. |
+| `fee_min`, `fee_max`, `currency` | The range of all verified fees, in the conference's own currency. `null` when there are no fees. |
+| `*_usd`, `*_php` | The same amounts in US dollars and Philippine pesos at today's rate. `null` when the currency can't be converted. |
 
-- Every headline fee has `amount_usd` and `amount_php`. Use `standard_fee.amount_usd` to sort by
-  price across currencies.
-- `category` and `tier` say which rate was picked. They make a good tooltip.
-- **Required:** wherever you show converted prices (USD or PHP), link to the rate provider:
+- To sort by price across currencies, use `standard_fee.amount_usd` (or `fee_min_usd`).
+- `category` and `tier` name the rate that was picked; they make a good tooltip.
+- **Required:** wherever converted prices (USD or PHP) are shown, add the line
   "Rates by [ExchangeRate-API](https://www.exchangerate-api.com)". Their free terms require it.
+
+### Deadlines
+
+`abstract_deadline` is listed by only about 1 in 4 conferences. When it is `null`, show
+`paper_deadline` instead, labelled "paper deadline". Compare deadlines with the **user's local
+date**, not UTC, or a deadline that passed yesterday can look open after midnight in Manila.
 
 ### Online attendance: `online`
 
 | Value | Meaning |
 |---|---|
-| `"online option"` | Hybrid, or online presentation is allowed |
+| `"online option"` | Hybrid, or presenting online is allowed |
 | `"online only"` | Fully virtual |
-| `"in person only"` | The site says presenting in person is required |
-| `null` | The site doesn't say |
+| `"in person only"` | The conference says presenting in person is required |
+| `null` | The conference doesn't say |
 
-The detail view adds `attendance.evidence`: the quote or fact the answer is based on.
+`attendance.evidence` holds the quote or fact behind the answer, for a tooltip.
 
 ### Publication history: `history_label`, `history_years`
 
 | Value | Meaning |
 |---|---|
-| `"has history"` | Earlier editions published proceedings (IEEE, ACM, Springer, ...). `history_years` lists them, newest first. |
+| `"has history"` | Earlier editions published proceedings (IEEE, ACM, Springer, ...). `history_years` lists the years, newest first. |
 | `"no history found"` | Nothing found. **Not a warning:** first editions and smaller publishers land here too. |
 | `null` | Not checked (conferences with an `organizer_flag`) |
 
-Show it as a neutral label, never as "predatory" or "safe". It is one signal among several.
+Show it as a neutral label, never as "safe" or "predatory".
 
-### Other fields
+### Warnings: `organizer_flag`
 
-| Field | Meaning |
-|---|---|
-| `organizer_flag` | A warning about the organizer, e.g. WASET, a widely reported predatory organizer. `null` for almost all. We suggest hiding these by default. |
-| `abstract_deadline` | Only about a quarter of conferences list one. When it is `null`, show `paper_deadline` instead, labelled as such. |
-| `sources` | The sites the conference was found on. |
-| `status`, `review_note` | Where the scraper got to (next table). |
+`null` for almost every conference. When set, it is a warning about the organizer, for example
+`"WASET, a widely reported predatory conference organizer"`. We suggest hiding these
+conferences by default, with a toggle to show them.
 
 ### Fee status, in plain words
 
-`status` and `review_note` are written for the scraper. Show these labels instead:
+`status` and `review_note` are written for us. Show these labels instead:
 
 | `status` | `review_note` starts with | Show |
 |---|---|---|
-| `enriched` | anything | Fees found |
-| `needs_review` | `fees not published yet` / `fees not found` | No fees posted yet |
+| `enriched` | (anything) | Fees found |
+| `needs_review` | `fees not published yet` or `fees not found` | No fees posted yet |
 | `needs_review` | `prices on the page were not extracted` | Fees on the site, not read yet |
 | `needs_review` | `fees found, but none could be verified` | Fees unverified |
 | `needs_review` | `no homepage` | Website unreadable |
 | `needs_review` | contains `don't match listing` | Check the edition |
 | `collected` | | Not read yet |
 
+### Other fields
+
+| Field | Meaning |
+|---|---|
+| `id` | Stable number; use it for `/conferences/{id}` and in your URLs |
+| `homepage`, `registration_url` | Links to the conference's own site |
+| `sources` | The sites the conference was found on |
+
 ---
 
-## 3. One conference: `GET /conferences/{id}`
+## 3. `GET /conferences/{id}`: one conference
 
 The same fields as a list row, plus:
 
 | Field | Contents |
 |---|---|
-| `description` | 1 to 3 sentences on the topics (can be long; clamp it) |
-| `fees` | Every fee (next example) |
+| `description` | A few sentences on the topics (can be long; clamp it) |
+| `fees` | Every fee (below) |
 | `history` | `{ has_history, editions: [{ year, name, publisher, doi }], publishers, note }` |
-| `attendance` | `{ mode, evidence: [{ source, says, text }] }` |
-| `listings` | The raw records from each source site |
+| `listings` | The raw records from each source site (you can ignore these) |
 | `field_sources` | Where each value came from: `{ "start_date": { "source": "homepage", "url": "..." } }` |
 
 One entry in `fees`:
 
 ```json
 {
-  "category": "International Participant IEEE Member",
+  "id": 9953,
+  "category": "Regular Author",
   "tier": null,
-  "amount": 550.0, "currency": "USD",
-  "amount_usd": 550.0, "amount_php": 34374.89,
+  "amount": 500.0,
+  "currency": "USD",
+  "amount_usd": 500.0,
+  "amount_php": 31542.15,
+  "notes": "Full paper (within 5 pages)",
+  "source_url": "https://pcds.cc/reg.html",
   "check_status": "verified",
-  "evidence": "Registration Fee International Participant IEEE Member: USD 550 ...",
-  "kind": { "who": "author", "student": false, "member": true,
-            "mode": null, "period": null, "local": false }
+  "evidence": "Regular Author | 500USD | Full paper (within 5 pages) ...",
+  "kind": { "who": "author", "student": false, "member": null,
+            "mode": null, "period": "regular", "local": null }
 }
 ```
 
-- **`check_status`:**
-  - `verified`: the amount was found on the page;
-  - `not_found` or `implausible`: it failed the check. Show those crossed out; they don't count
-    in the fee range.
-- **`kind`:** the rate in fixed terms.
-  - `who`: `author`, `attendee` or `extra` (an add-on such as an extra paper);
-  - `mode`: `onsite` or `virtual`;
-  - `period`: `early`, `regular` or `late`;
-  - `local`: `true` for rates for the host country only.
-- **DOI links:** `https://doi.org/{doi}`.
+- **`check_status`:** `verified` means the amount was found on the conference's page.
+  `not_found` or `implausible` means it failed our check: show it crossed out or leave it out.
+  Those fees don't count in `fee_min`/`fee_max`.
+- **`kind`** describes the rate in fixed terms (`null` = not stated):
+  - `who`: `author`, `attendee` or `extra` (an add-on such as an extra paper)
+  - `student`, `member`: `true` / `false`
+  - `mode`: `onsite` or `virtual`
+  - `period`: `early`, `regular` or `late`
+  - `local`: `true` for rates only for the host country
+- **DOI links** in `history.editions`: `https://doi.org/{doi}`
+
+A conference that doesn't exist returns **404**.
 
 ---
 
-## 4. Counts: `GET /summary`
-
-For filter chips and headings.
+## 4. `GET /summary`: counts
 
 | Field | Example |
 |---|---|
-| `conferences_by_continent` | `{ "Asia": 701, "Europe": 407, ... }` |
-| `conferences_by_source` | `{ "ieee": 633, "wikicfp": 428, ... }` |
-| `scope` | `{ "continents": ["Asia"], "conferences": 701, "conferences_with_fees": 395 }` |
-| `exchange_rates` | `{ "date": "Tue, 29 Sep 2026 00:02:31 +0000", "name": "ExchangeRate-API", "url": "https://www.exchangerate-api.com" }` for the attribution line |
+| `conferences_by_continent` | `{ "Asia": 1413, "Europe": 516, "North America": 127, ... }` |
+| `conferences_by_source` | `{ "ieee": 1081, "wikicfp": 742, ... }` |
+| `scope` | `{ "continents": ["Asia"], "conferences": 1413, "conferences_with_fees": 801 }` |
+| `exchange_rates` | `{ "date": "Fri, 16 Oct 2026 00:02:31 +0000", "name": "ExchangeRate-API", "url": "https://www.exchangerate-api.com" }`, for the attribution line |
+
+Other fields in the response are for us.
 
 ---
 
-## 5. Spreadsheet: `GET /conferences/export`
-
-Returns a file download.
+## 5. `GET /conferences/export`: CSV or Excel file
 
 | Parameter | Values |
 |---|---|
-| `fmt` | `csv` or `xlsx` |
-| `continent` | A continent, or `all`. Default: Asia |
-| The date filters from `/conferences` | Same names, same meaning |
+| `fmt` | `csv` (default) or `xlsx` |
+| `continent` | A continent, or `all`. **Default: Asia.** |
+| `source`, `starts_from`, `starts_to`, `abstract_from`, `abstract_to`, `has_abstract` | Same as for `/conferences` |
 
-A plain link works: `<a href="http://127.0.0.1:8080/conferences/export?fmt=xlsx">Download</a>`.
-The file name is in the `Content-Disposition` header, which the browser can read.
+The answer is a file; its name is in the `Content-Disposition` header (for example
+`conferences-20261017-023045.xlsx`). A plain `<a href>` link **won't work**, because it can't
+send the key. Download it with `fetch` instead:
+
+```js
+async function download(fmt = "xlsx") {
+  const res = await fetch(`${API}/conferences/export?fmt=${fmt}`, { headers: { "X-API-Key": KEY } });
+  const name = /filename="(.+)"/.exec(res.headers.get("Content-Disposition"))?.[1] ?? `conferences.${fmt}`;
+  const url = URL.createObjectURL(await res.blob());
+  Object.assign(document.createElement("a"), { href: url, download: name }).click();
+  URL.revokeObjectURL(url);
+}
+```
 
 ---
 
-## 6. Health: `GET /health`
+## 6. `GET /health`: is it up?
+
+No key needed.
 
 ```json
-{ "ok": true, "window": ["2026-10-01", "2027-03-31"], ... }
+{ "ok": true, "read_only": true, "window": ["2026-10-01", "2027-03-31"], ... }
 ```
 
-`window` is the date range the data covers; use it in headings.
+`window` is the date range the data covers; use it in headings ("Conferences from October 2026
+to March 2027").
+
+---
+
+## Errors
+
+Every error is JSON with a `detail` field.
+
+| Status | When | Example `detail` |
+|---|---|---|
+| `401` | Missing or wrong `X-API-Key` | `"Missing or invalid API key. Send it in the X-API-Key header."` |
+| `404` | Unknown conference id, or an endpoint that doesn't exist | `"Not Found"` |
+| `422` | A parameter is invalid (bad date, `limit` over 5000, ...) | A list saying which parameter and why |
+| `500` / `503` | Our side is down; try again later and tell us | |
+
+---
+
+## Calling from a browser (CORS)
+
+- **Local development:** pages on `localhost` or `127.0.0.1` (any port) can call the API
+  directly.
+- **Your deployed site:** send us its address (for example `https://conferences.example.com`)
+  and we add it. Until then the browser blocks the calls.
+- **The key and the browser:** a key in browser code can be read by anyone who opens the
+  developer tools. If you can, call the API from your server (an API route or server
+  component) and keep the key in a server-side environment variable. If the key leaks, tell us
+  and we replace it.
 
 ---
 
 ## Good to know
 
-- **Data changes.** We re-read sites while the window is open, and fees usually appear close to
-  the event. Don't cache the list for more than a few hours.
-- **Times are dates only.** Compare deadlines with the user's local date, not UTC, or a deadline
-  that passed yesterday can still look open after midnight in Manila.
-- **Questions or missing fields:** ask us before working around something. Most additions are
-  small on our side.
-
----
-
-## Where the data comes from (for us)
-
-Everything is scraped on the laptop. The update chain's last step (`publish`) copies the whole
-database into Supabase's private schema `scraper`, and this API (on DCISM, `READ_ONLY=true`)
-reads it from there on every request, so new data shows up without a restart. Deploying and
-checking the API: `docs/DEPLOY.md`.
+- **Data changes.** Conferences are re-checked while the window is open, and fees often appear
+  close to the event. Don't cache the list for more than a few hours.
+- **Missing a field, or something looks wrong?** Ask us before working around it. Most
+  additions are small on our side.

@@ -51,7 +51,8 @@ uv run python -m scripts.copy_to_supabase  # whole database -> Supabase schema `
 - **Public server** (DCISM, `conference-scraper-api.dcism.org`): runs the API with
   `READ_ONLY=true` (only the data router; /sources, /pipeline, /browse, /tools are not
   mounted) under pm2 on `127.0.0.1:20280` (the port DCISM's Apache proxies to). Since
-  2026-10-17 it reads Supabase's private `scraper` schema (`DATABASE_SCHEMA=scraper`), which
+  2026-10-17 it needs an API key (`API_KEYS`, header `X-API-Key`, `app/api/auth.py`; every
+  router, not /health) and reads Supabase's private `scraper` schema (`DATABASE_SCHEMA=scraper`), which
   the update chain's `publish` step refreshes with `copy_to_supabase`; scraping stays on the
   laptop. Setup and redeploy: `docs/DEPLOY.md` section 4. (It used to read a MariaDB copy
   imported by hand; DCISM's DB port is closed from outside.)

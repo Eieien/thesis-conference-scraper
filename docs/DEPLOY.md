@@ -54,7 +54,14 @@ uv run python -m scripts.copy_to_supabase
   READ_ONLY=true
   DATABASE_URL=postgresql+psycopg://USER:PASSWORD@aws-0-ap-south-1.pooler.supabase.com:5432/postgres
   DATABASE_SCHEMA=scraper
+  API_KEYS='["KEY"]'
   ```
+
+- **API keys:** every endpoint except `/health` needs the header `X-API-Key` with one of the
+  `API_KEYS`. To replace a key without cutting anyone off: add the new one
+  (`'["OLD", "NEW"]'`), `pm2 restart conference-api`, hand out the new key, then remove the old
+  one and restart again. Make a key with
+  `python -c "import secrets; print(secrets.token_urlsafe(32))"`.
 
 - **Process:** pm2 keeps uvicorn running and `pm2 save` brings it back after a reboot.
 
@@ -78,7 +85,8 @@ uv run python -m scripts.copy_to_supabase
 
 ```powershell
 curl.exe https://conference-scraper-api.dcism.org/health        # {"ok":true,"read_only":true,...}
-curl.exe https://conference-scraper-api.dcism.org/summary       # counts per continent
+curl.exe -H "X-API-Key: KEY" https://conference-scraper-api.dcism.org/summary   # counts per continent
+curl.exe https://conference-scraper-api.dcism.org/summary       # 401 without the key
 curl.exe -X POST -o NUL -w "%{http_code}\n" https://conference-scraper-api.dcism.org/pipeline/update   # 404
 ```
 
