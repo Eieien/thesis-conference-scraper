@@ -113,7 +113,8 @@ def list_conferences(
         None, description=f"One of {', '.join(CONTINENTS)}, or Unknown for places not recognised"
     ),
     source: str | None = Query(None, description="Only conferences collected from this source"),
-    limit: int = Query(100, le=1000),
+    # 5,000: one call holds the whole scope (Asia was 1,415 after widening the window to March).
+    limit: int = Query(100, le=5000),
     offset: int = 0,
     compact: bool = _COMPACT,
     dates: DateRange = Depends(),

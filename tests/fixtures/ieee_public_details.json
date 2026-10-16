@@ -1,0 +1,33 @@
+{
+ "statusType": "OK",
+ "entity": {
+  "searchStatus": "{Timems: 1,Rid: zI/nvJI0zIMRCtQXVQ==}",
+  "event": null,
+  "eventDetail": {
+   "eventId": 71525,
+   "eventTitle": "2027 39th International Conference on Microelectronic Test Structures (ICMTS)",
+   "startDate": "2027-04-05",
+   "endDate": "2027-04-08",
+   "about": "Components, Circuits, Devices and Systems; Engineered Materials, Dielectrics and Plasmas",
+   "location": {
+    "city": "Udine",
+    "region": "",
+    "country": "Italy"
+   },
+   "sponsors": "IEEE Electron Devices Society; International Centre for Mechanical Sciences (CISM); Universit\u00e0 degli Studi di Udine",
+   "keywords": "test structure design,Characterization methods,material and process characterization,replicated feature metrology,Manufacturing of Integrated Circuits and MEMS,Device and Circuit Modelling,Parameter Extraction,Yield Enhancement and Production Process Control,Test Structure Measurement Utilisation Strategy,",
+   "scope": "For more than 35 years ICMTS has been the most important open forum to report scientific results achieved by means of test structures. It provides the community with the opportunity to meet and present new ideas in the field of characterization techniques and, in particular, in the design, characterization and fabrication of test structures for micro and nano-electronics. The Conference will bring together designers and users of test structures to discuss recent developments and future directions, in a one-track program, with convivial breaks allowing attendees to discuss and exchange viewpoints and challenges also with equipment vendors.",
+   "callForPapers": "2026-11-01",
+   "url": "icmts.net/",
+   "eventContact": "francesco.driussi@uniud.it",
+   "sponsorTypes": "1; 9; 9",
+   "venues": "Auditorium Sgorlon, DILL Department, University of Udine, Via Monsignor Pasquale Margreth, 3, , , , Udine, , Italy, 33100, ;",
+   "region": "Region08-Europe,Middle East,Africa",
+   "isvirtual": "N",
+   "eventFormat": "inperson"
+  }
+ },
+ "entityType": "org.ieee.conf.data.aws.search.model.EventResult",
+ "status": 200,
+ "metadata": {}
+}

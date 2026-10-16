@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from functools import cached_property
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
@@ -224,7 +225,9 @@ class ConferenceOut(ORMModel):
     # Read for the headline fees; only the detail view sends them (ConferenceDetailOut).
     fees: list[FeeOut] = Field(default_factory=list, exclude=True)
 
-    def _headlines(self):
+    @cached_property
+    def headline_pair(self):
+        """(standard, student), worked out once per row: both fields below read it."""
         s = get_settings()
         return headline_fees(self.fees, lambda f: convert(f.amount, f.currency, "USD", s))
 
@@ -232,13 +235,13 @@ class ConferenceOut(ORMModel):
     @property
     def standard_fee(self) -> HeadlineFee | None:
         """What a regular, non-member, international author pays in person (fee_kinds.py)."""
-        return _headline(self._headlines()[0])
+        return _headline(self.headline_pair[0])
 
     @computed_field
     @property
     def student_fee(self) -> HeadlineFee | None:
         """The lowest student rate open to international participants."""
-        return _headline(self._headlines()[1])
+        return _headline(self.headline_pair[1])
 
     @computed_field
     @property

@@ -20,8 +20,18 @@ log = logging.getLogger("app")
 async def lifespan(_: FastAPI):
     settings = get_settings()
     settings.ensure_dirs()
-    if not inspect(engine).has_table("conferences"):
+    if not inspect(engine).has_table("conferences", schema=settings.database_schema):
         log.warning("Database has no tables yet. Run: uv run alembic upgrade head")
+    # Runs a previous process left "running" can't finish now; close them so they neither
+    # mislead the dashboard nor block new runs (app/api/run_guard.py). Only the writing server
+    # does this: a read-only server shares the database with a live one.
+    if not settings.read_only and inspect(engine).has_table("scrape_runs"):
+        from app.api.run_guard import close_abandoned
+        from app.db import SessionLocal
+
+        with SessionLocal() as db:
+            if closed := close_abandoned(db):
+                log.info("closed %d runs left unfinished by a previous server", closed)
     # Today's exchange rates for the USD/PHP columns; never blocks startup.
     refresh = asyncio.create_task(refresh_rates(settings))
     yield
@@ -49,11 +59,12 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["Content-Disposition"],  # the export's file name
 )
-app.include_router(browse.router)
-app.include_router(sources.router)
-app.include_router(pipeline.router)
 app.include_router(data.router)
-app.include_router(tools.router)
+if not get_settings().read_only:
+    app.include_router(browse.router)
+    app.include_router(sources.router)
+    app.include_router(pipeline.router)
+    app.include_router(tools.router)
 
 
 @app.get("/health", tags=["meta"])
@@ -61,6 +72,7 @@ def health():
     s = get_settings()
     return {
         "ok": True,
+        "read_only": s.read_only,
         "window": [s.window_start, s.window_end],
         "gemini_configured": bool(s.gemini_api_key),
         "edas_session_saved": s.edas_state_path.exists(),

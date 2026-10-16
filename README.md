@@ -1,6 +1,6 @@
 # Conference Scraper
 
-Collects computer science and technology conferences **starting 1 Oct – 30 Nov 2026** from several
+Collects computer science and technology conferences **starting 1 Oct 2026 – 31 Mar 2027** from several
 sources. For each one it records name, dates, location, description, deadlines and **registration fees**.
 
 - **Sources** → `raw_listings` (one row per source per conference)

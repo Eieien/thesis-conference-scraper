@@ -223,6 +223,13 @@ def _as_url(raw: str | None) -> str | None:
     return raw if re.match(r"https?://", raw, re.I) else f"https://{raw.lstrip('/')}"
 
 
+def is_detail_response(url: str) -> bool:
+    """Whether a response is a detail page's data. IEEE moved it in October 2026 from
+    conferences.ieee.org/.../conf/details to conference-api.ieee.org/public/details?id=...; the
+    scraper missed the new one and took every page for throttling."""
+    return "conf/details" in url or "/public/details" in url
+
+
 def parse_detail(body: dict) -> dict:
     """The fields a detail page adds, from the JSON the page receives (`entity.eventDetail`)."""
     d = ((body or {}).get("entity") or {}).get("eventDetail") or {}
@@ -262,7 +269,7 @@ async def read_details(
                 bodies: list[dict] = []
 
                 async def on_response(resp, bodies=bodies):
-                    if "conf/details" not in resp.url:
+                    if not is_detail_response(resp.url):
                         return
                     try:
                         bodies.append(await resp.json())

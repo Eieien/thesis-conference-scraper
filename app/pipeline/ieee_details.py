@@ -34,8 +34,12 @@ log = logging.getLogger(__name__)
 NO_HOMEPAGE_NOTE = "no homepage and no source page text"
 
 
-def conferences_needing_details(db: Session, settings: Settings) -> list[Conference]:
-    """In-scope conferences with an IEEE listing and no homepage, earliest first."""
+def conferences_needing_details(
+    db: Session, settings: Settings, continents: list[str] | None = None
+) -> list[Conference]:
+    """Conferences on `continents` (default: the project scope) with an IEEE listing and no
+    homepage, earliest first."""
+    continents = continents or settings.scope_continents
     confs = db.scalars(
         select(Conference)
         .where(Conference.homepage.is_(None))
@@ -46,7 +50,7 @@ def conferences_needing_details(db: Session, settings: Settings) -> list[Confere
         c
         for c in confs
         if any(row.source == "ieee" for row in c.listings)
-        and (continent_of(c.country) or "Unknown") in settings.scope_continents
+        and (continent_of(c.country) or "Unknown") in continents
     ]
 
 
@@ -75,7 +79,12 @@ def apply_detail(conf: Conference, row: RawListing, detail: dict) -> None:
 
 
 async def run_ieee_details(
-    settings: Settings, run_id: int, *, batch_size: int = 60, rest_seconds: int = 900
+    settings: Settings,
+    run_id: int,
+    *,
+    batch_size: int = 60,
+    rest_seconds: int = 900,
+    continents: list[str] | None = None,
 ) -> None:
     stats: Counter = Counter()
     delay = float(getattr(settings, "ieee_delay_seconds", 10.0))
@@ -83,7 +92,7 @@ async def run_ieee_details(
         run = db.get(ScrapeRun, run_id)
         try:
             by_event: dict[int, tuple[Conference, RawListing]] = {}
-            for conf in conferences_needing_details(db, settings):
+            for conf in conferences_needing_details(db, settings, continents):
                 row = next(r for r in conf.listings if r.source == "ieee")
                 by_event[int(row.source_id)] = (conf, row)
             ids = list(by_event)

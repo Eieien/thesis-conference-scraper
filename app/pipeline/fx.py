@@ -8,6 +8,7 @@ are available yet, conversions return None rather than a guess.
 
 import json
 import logging
+import os
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -22,7 +23,7 @@ ATTRIBUTION = {"name": "ExchangeRate-API", "url": "https://www.exchangerate-api.
 MAX_AGE_SECONDS = 24 * 3600
 TARGETS = ("USD", "PHP")
 
-_memo: dict[str, object] = {"mtime": None, "data": None}
+_memo: dict[str, object] = {"mtime": None, "data": None, "checked": 0.0}
 
 
 def _path(settings: Settings) -> Path:
@@ -31,13 +32,27 @@ def _path(settings: Settings) -> Path:
 
 def load_rates(settings: Settings) -> dict | None:
     """The cached rates file ({"rates": {code: units per USD}, "date": ..., ...}) or None."""
+    # One stat per second at most: a page of prices converts thousands of amounts, and a stat per
+    # amount cost ~4 s of a ~19 s public-data build.
+    now = time.monotonic()
+    fresh = now - float(_memo.get("checked") or 0) < 1.0
+    if fresh and _memo["data"] is not None and _memo.get("dir") == settings.data_dir:
+        return _memo["data"]  # type: ignore[return-value]
+    if _memo.get("dir") != settings.data_dir:  # another data folder (tests): start over
+        _memo.update(mtime=None, data=None, dir=settings.data_dir)
+    _memo["checked"] = now
     path = _path(settings)
     try:
         mtime = path.stat().st_mtime
     except FileNotFoundError:
         return None
     if _memo["mtime"] != mtime:
-        _memo["data"] = json.loads(path.read_text(encoding="utf-8"))
+        try:
+            _memo["data"] = json.loads(path.read_text(encoding="utf-8"))
+        except ValueError:
+            # Unreadable (an older, non-atomic write was cut short): keep the last good rates.
+            log.warning("exchange rates file is unreadable; keeping the last good copy")
+            return _memo["data"]  # type: ignore[return-value]
         _memo["mtime"] = mtime
     return _memo["data"]  # type: ignore[return-value]
 
@@ -71,7 +86,11 @@ async def refresh_rates(settings: Settings, *, force: bool = False) -> dict | No
     }
     path = _path(settings)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data), encoding="utf-8")
+    # Write aside, then swap in: a request converting a price mid-refresh (the refresh runs at
+    # startup) must never read a half-written file. Seen on 2026-10-12 as a 500 on /public/data.
+    tmp = path.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(data), encoding="utf-8")
+    os.replace(tmp, path)
     return data
 
 

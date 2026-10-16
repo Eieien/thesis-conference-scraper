@@ -1,12 +1,13 @@
 # Conference API: guide for the frontend
 
-A read-only API over the conferences we collected: CS and tech conferences **starting 1 Oct to
-30 Nov 2026**, focused on **Asia**, with registration fees, deadlines, online attendance and
+A read-only API over the conferences we collected: CS and tech conferences **starting 1 Oct 2026
+to 31 Mar 2027**, focused on **Asia**, with registration fees, deadlines, online attendance and
 publication history.
 
-- **Base URL (local):** `http://127.0.0.1:8080`
-- **Interactive reference:** `http://127.0.0.1:8080/docs` lists every endpoint and field, and
-  lets you try requests in the browser.
+- **Base URL (public):** `https://conference-scraper-api.dcism.org` (local development:
+  `http://127.0.0.1:8080`)
+- **Interactive reference:** `https://conference-scraper-api.dcism.org/docs` lists every
+  endpoint and field, and lets you try requests in the browser.
 - **Format:** JSON. Dates are `YYYY-MM-DD` strings. Missing values are `null`, never left out.
 - **No authentication.**
 - **CORS:** you can call the API straight from the browser when your app runs on `localhost` or
@@ -22,7 +23,7 @@ run the scraper and are for us.
 
 | What you want | Request |
 |---|---|
-| The list of conferences | `GET /conferences?continent=Asia&compact=true&limit=1000` |
+| The list of conferences | `GET /conferences?continent=Asia&compact=true&limit=5000` |
 | One conference, with every fee | `GET /conferences/{id}` |
 | Counts for filter chips and headers | `GET /summary` |
 | A spreadsheet download | `GET /conferences/export?fmt=xlsx` |
@@ -35,7 +36,7 @@ run the scraper and are for us.
 Returns an array of conferences, sorted by start date.
 
 **Always send `compact=true` for lists.** It leaves out the two long fields (`description` and
-`field_sources`), which cuts the response from about 2.4 MB to about 50 KB.
+`field_sources`), which keeps the whole Asian list to roughly 100 KB over the wire.
 
 ### Filters (all optional, combine freely)
 
@@ -47,7 +48,7 @@ Returns an array of conferences, sorted by start date.
 | `starts_from`, `starts_to` | `2026-11-01` | Conference start date in this range (inclusive) |
 | `abstract_from`, `abstract_to` | `2026-09-30` | Abstract deadline in this range (inclusive) |
 | `has_abstract` | `true` | Only conferences that list an abstract deadline |
-| `limit`, `offset` | `1000`, `0` | Paging. `limit` is at most 1000; all of Asia fits in one call |
+| `limit`, `offset` | `5000`, `0` | Paging. `limit` is at most 5000; all of Asia (about 1,400) fits in one call |
 
 Search, sorting by fee, and the history and online filters are not API parameters. Load the list
 once (it is small with `compact=true`) and filter it in the browser. That is what our dashboard
@@ -57,10 +58,10 @@ does.
 
 ```text
 # All Asian conferences
-GET /conferences?continent=Asia&compact=true&limit=1000
+GET /conferences?continent=Asia&compact=true&limit=5000
 
 # Abstract deadline not passed yet (use today's date)
-GET /conferences?continent=Asia&compact=true&limit=1000&abstract_from=2026-09-30
+GET /conferences?continent=Asia&compact=true&limit=5000&abstract_from=2026-09-30
 
 # Conferences starting in the first half of November, with fees
 GET /conferences?continent=Asia&compact=true&has_fees=true&starts_from=2026-11-01&starts_to=2026-11-15
@@ -250,7 +251,7 @@ The file name is in the `Content-Disposition` header, which the browser can read
 ## 6. Health: `GET /health`
 
 ```json
-{ "ok": true, "window": ["2026-10-01", "2026-11-30"], ... }
+{ "ok": true, "window": ["2026-10-01", "2027-03-31"], ... }
 ```
 
 `window` is the date range the data covers; use it in headings.
@@ -265,3 +266,12 @@ The file name is in the `Content-Disposition` header, which the browser can read
   that passed yesterday can still look open after midnight in Manila.
 - **Questions or missing fields:** ask us before working around something. Most additions are
   small on our side.
+
+---
+
+## Where the data comes from (for us)
+
+Everything is scraped on the laptop. The update chain's last step (`publish`) copies the whole
+database into Supabase's private schema `scraper`, and this API (on DCISM, `READ_ONLY=true`)
+reads it from there on every request, so new data shows up without a restart. Deploying and
+checking the API: `docs/DEPLOY.md`.

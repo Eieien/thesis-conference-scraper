@@ -25,10 +25,27 @@ class Settings(BaseSettings):
     # can read the data but not start scraping runs.
     cors_origins: list[str] = []
     cors_origin_regex: str | None = r"https?://(localhost|127\.0\.0\.1)(:\d+)?"
+    # READ_ONLY=true on the public server: only the data endpoints the frontend reads are
+    # served. Scraping (/sources, /pipeline, /browse, /tools) stays on the scraping machine.
+    read_only: bool = False
+    # Postgres schema holding the tables. The public server reads Supabase's private copy
+    # (scripts/copy_to_supabase.py): DATABASE_SCHEMA=scraper. Unset = the default schema.
+    database_schema: str | None = None
+
+    # The public website (web/, Next.js on Vercel) reads Supabase; scripts/sync_supabase.py
+    # fills it. The connection string holds the database password: .env only, never printed.
+    supabase_db_url: SecretStr | None = None
+    public_continents: list[str] = ["Asia", "Europe"]
+    # `sync_supabase --local` fills this instead: the PGlite database of `npm run db` in web/.
+    local_db_url: str = "postgresql://postgres@127.0.0.1:55432/postgres"
+    # After a sync, POST {site_url}/api/revalidate with this secret so the site shows the new
+    # data at once (it would otherwise within five minutes). Same value as on Vercel.
+    site_url: str | None = None
+    revalidate_secret: SecretStr | None = None
 
     # Conferences whose start date falls inside this window are kept.
     window_start: date = date(2026, 10, 1)
-    window_end: date = date(2026, 11, 30)
+    window_end: date = date(2027, 3, 31)
 
     # HTTP politeness
     user_agent: str = "Mozilla/5.0 (compatible; ConferenceResearchBot/0.1)"
@@ -39,6 +56,9 @@ class Settings(BaseSettings):
     cache_ttl_hours: int = 72
     respect_robots: bool = True
     max_concurrent_domains: int = 8
+    # Conference detail pages (WikiCFP event, EasyChair CFP, ...) change little; re-collections
+    # reuse saved copies this long instead of re-downloading hundreds of pages each time.
+    detail_cache_days: int = 7
 
     # Gemini extraction
     gemini_api_key: str | None = None

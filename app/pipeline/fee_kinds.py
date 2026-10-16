@@ -20,6 +20,7 @@ when read, like continents; nothing is stored.
 
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 
 _EXTRA = re.compile(
     r"extra|additional|\badd[- ]?on|banquet|dinner|gala|tour|excursion|accompany|companion|"
@@ -67,6 +68,9 @@ class FeeKind:
     local: bool | None
 
 
+# The same few thousand category strings repeat across 12,000+ fees; FeeKind is frozen, so the
+# result can be shared. This cut a full public-data build from ~19 s to a fraction (2026-10-12).
+@lru_cache(maxsize=32768)
 def classify(category: str | None, tier: str | None = None, notes: str | None = None) -> FeeKind:
     cat = category or ""
     tier_text = tier or ""

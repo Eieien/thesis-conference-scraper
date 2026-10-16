@@ -1,7 +1,7 @@
 import logging
 import traceback
 from collections import Counter
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -53,7 +53,8 @@ async def collect_listings(
         async for listing in adapter.collect(fetcher, max_pages=max_pages):
             maybe_relevant = listing.start_date is None or in_window(listing.start_date, settings)
             if fetch_details and adapter.has_details and maybe_relevant:
-                listing = await adapter.fetch_detail(fetcher, listing)
+                with fetcher.cache_for(timedelta(days=settings.detail_cache_days)):
+                    listing = await adapter.fetch_detail(fetcher, listing)
             yield listing
             count += 1
             if limit and count >= limit:
@@ -74,8 +75,8 @@ async def run_collect(
                 stats["new" if upsert_listing(db, source, listing) else "updated"] += 1
                 if listing.start_date and in_window(listing.start_date, settings):
                     stats["in_window"] += 1
-                db.commit()
                 run.stats = dict(stats)
+                db.commit()  # after the counts: nothing stays open while the next page loads
             run.status = "succeeded"
         except Exception as e:  # recorded on the run so the API can show it
             log.exception("collect %s failed", source)

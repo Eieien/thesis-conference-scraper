@@ -35,6 +35,8 @@ class ScrapeRun(Base):
     error: Mapped[str | None] = mapped_column(Text)
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Client-chosen key (the Idempotency-Key header): the same key always means the same run.
+    idempotency_key: Mapped[str | None] = mapped_column(String(128), unique=True)
 
 
 class FetchedPage(Base):
@@ -87,6 +89,9 @@ class Conference(Base):
     review_note: Mapped[str | None] = mapped_column(Text)
     # When enrich last read this conference's pages (None = never).
     enriched_at: Mapped[datetime | None] = mapped_column(DateTime)
+    # SHA-256 of the page text enrich last sent to the LLM. A re-read whose pages give the same
+    # text skips the LLM call (same text, same answer) and keeps the free daily quota.
+    read_fingerprint: Mapped[str | None] = mapped_column(String(64))
     # Earlier editions with published proceedings (app/pipeline/history.py); None = not checked.
     history: Mapped[dict | None] = mapped_column(JSON)
     # Can people attend or present online? (app/pipeline/attendance.py); None = unknown.

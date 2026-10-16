@@ -5,6 +5,8 @@ import hashlib
 import json
 import logging
 import time
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -93,6 +95,8 @@ class Fetcher:
         # Domains that refused or never answered a connection; later requests fail at once.
         self._unreachable: set[str] = set()
         self._global = asyncio.Semaphore(settings.max_concurrent_domains)
+        # How old a cached page may be; `cache_for` raises it for a block of requests.
+        self._ttl = timedelta(hours=settings.cache_ttl_hours)
 
     async def __aenter__(self) -> "Fetcher":
         self._client = httpx.AsyncClient(
@@ -128,6 +132,16 @@ class Fetcher:
         """Whether robots.txt lets this crawler read `url` (always true when robots are off)."""
         return not self.respect_robots or await self._robots_allowed(url)
 
+    @contextmanager
+    def cache_for(self, max_age: timedelta) -> Iterator[None]:
+        """Accept cached pages up to `max_age` old inside this block (e.g. detail pages during a
+        re-collection). Listing pages outside it still use the normal, shorter limit."""
+        before, self._ttl = self._ttl, max(max_age, self._ttl)
+        try:
+            yield
+        finally:
+            self._ttl = before
+
     def store(self, url: str, final_url: str, html: str) -> None:
         """Put a page read some other way (a real browser, see app/pipeline/recover.py) into
         the cache, so the normal pipeline reads it like any fetched page."""
@@ -154,7 +168,7 @@ class Fetcher:
             return None
         age = datetime.now(UTC) - row.fetched_at.replace(tzinfo=UTC)
         path = self.settings.cache_dir / row.body_path
-        if age > timedelta(hours=self.settings.cache_ttl_hours) or not path.exists():
+        if age > self._ttl or not path.exists():
             return None
         return FetchResult(
             url=url,

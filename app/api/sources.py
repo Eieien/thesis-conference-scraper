@@ -1,9 +1,9 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
 
+from app.api.run_guard import IDEMPOTENCY_KEY, start_run
 from app.config import Settings, get_settings
 from app.db import get_db
-from app.models import ScrapeRun
 from app.pipeline.collect import collect_listings, run_collect
 from app.pipeline.ieee_details import run_ieee_details
 from app.schemas import ListingData, RunOut
@@ -56,6 +56,8 @@ async def preview(
 async def collect(
     name: str,
     background: BackgroundTasks,
+    response: Response,
+    idempotency_key: str | None = IDEMPOTENCY_KEY,
     max_pages: int | None = None,
     fetch_details: bool = True,
     db: Session = Depends(get_db),
@@ -63,37 +65,49 @@ async def collect(
 ):
     """Scrape a source into raw_listings in the background. Poll GET /runs/{id}."""
     _check_source(name)
-    run = ScrapeRun(
+    run, new = start_run(
+        db,
+        response,
         kind="collect",
         source=name,
         params={"max_pages": max_pages, "fetch_details": fetch_details},
+        key=idempotency_key,
     )
-    db.add(run)
-    db.commit()
-    background.add_task(
-        run_collect, settings, run.id, name, max_pages=max_pages, fetch_details=fetch_details
-    )
+    if new:
+        background.add_task(
+            run_collect, settings, run.id, name, max_pages=max_pages, fetch_details=fetch_details
+        )
     return run
 
 
 @router.post("/ieee/details", response_model=RunOut, status_code=202)
 async def ieee_details(
     background: BackgroundTasks,
+    response: Response,
+    idempotency_key: str | None = IDEMPOTENCY_KEY,
     batch_size: int = Query(60, ge=1, le=200),
     rest_seconds: int = Query(900, ge=0, description="Pause between batches, to avoid throttling"),
+    continent: list[str] | None = Query(None, description="Default: the project scope"),
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ):
     """Open the IEEE page of in-scope conferences that have no homepage, through a real browser,
     and save their official website (background). Stops by itself if IEEE starts throttling."""
-    run = ScrapeRun(
+    run, new = start_run(
+        db,
+        response,
         kind="ieee_details",
         source="ieee",
-        params={"batch_size": batch_size, "rest_seconds": rest_seconds},
+        params={"batch_size": batch_size, "rest_seconds": rest_seconds, "continent": continent},
+        key=idempotency_key,
     )
-    db.add(run)
-    db.commit()
-    background.add_task(
-        run_ieee_details, settings, run.id, batch_size=batch_size, rest_seconds=rest_seconds
-    )
+    if new:
+        background.add_task(
+            run_ieee_details,
+            settings,
+            run.id,
+            batch_size=batch_size,
+            rest_seconds=rest_seconds,
+            continents=continent,
+        )
     return run

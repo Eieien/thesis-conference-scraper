@@ -43,7 +43,7 @@ def test_compact_lists_leave_out_long_text():
 def test_source_filter_and_counts():
     counts = client.get("/summary").json()["conferences_by_source"]
     for source, n in counts.items():
-        rows = client.get("/conferences", params={"source": source, "limit": 1000, "compact": True})
+        rows = client.get("/conferences", params={"source": source, "limit": 5000, "compact": True})
         assert len(rows.json()) == n
         assert all(source in r["sources"] for r in rows.json())
 
@@ -84,7 +84,7 @@ def test_summary_listing_counts_are_listing_rows():
 
 
 def test_date_range_filters():
-    params = {"limit": 1000, "compact": True}
+    params = {"limit": 5000, "compact": True}
     rows = client.get(
         "/conferences", params={**params, "starts_from": "2026-11-01", "starts_to": "2026-11-15"}
     ).json()
