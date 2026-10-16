@@ -2,12 +2,13 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from sqlalchemy import inspect
 
 from app.api import browse, data, pipeline, sources, tools
+from app.api.auth import require_api_key
 from app.config import get_settings
 from app.db import engine
 from app.pipeline.fx import refresh_rates
@@ -59,12 +60,14 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["Content-Disposition"],  # the export's file name
 )
-app.include_router(data.router)
+# With API_KEYS set, every router needs the X-API-Key header; /health below stays open.
+_keyed = [Depends(require_api_key)]
+app.include_router(data.router, dependencies=_keyed)
 if not get_settings().read_only:
-    app.include_router(browse.router)
-    app.include_router(sources.router)
-    app.include_router(pipeline.router)
-    app.include_router(tools.router)
+    app.include_router(browse.router, dependencies=_keyed)
+    app.include_router(sources.router, dependencies=_keyed)
+    app.include_router(pipeline.router, dependencies=_keyed)
+    app.include_router(tools.router, dependencies=_keyed)
 
 
 @app.get("/health", tags=["meta"])
