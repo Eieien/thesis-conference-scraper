@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.models import Conference, Fee, RawListing
 from app.pipeline.fees import summarize_fees
+from app.pipeline.normalize import sane_end_date
 from app.pipeline.validate import DUPLICATE, VERIFIED, check_fees
 from app.scrapers.registry import SOURCE_PRIORITY
 
@@ -106,6 +107,7 @@ def apply_listing_fields(conf: Conference) -> None:
                 sources[field] = {"source": row.source, "url": row.url}
                 break
     conf.field_sources = sources
+    conf.end_date = sane_end_date(conf.start_date, conf.end_date)
 
 
 def sync_source_fees(db: Session, conf: Conference) -> None:
@@ -267,6 +269,12 @@ def combine(db: Session, keep: Conference, drop: Conference) -> None:
 
 def run_dedupe(db: Session, *, dry_run: bool = False) -> dict:
     conferences = list(db.scalars(select(Conference)))
+    if not dry_run:
+        # Repair impossible end dates written before the rule existed (sane_end_date).
+        for conf in conferences:
+            fixed = sane_end_date(conf.start_date, conf.end_date)
+            if fixed != conf.end_date:
+                conf.end_date = fixed
     pairs = find_duplicates(conferences)
     stats = {"pairs": len(pairs), "combined": [f"{d.id} -> {k.id}" for k, d in pairs]}
     if not dry_run:

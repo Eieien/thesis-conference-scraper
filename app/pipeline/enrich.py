@@ -1,6 +1,7 @@
 """Homepage enrichment: find registration/dates pages, have the LLM extract fees and deadlines."""
 
 import asyncio
+import hashlib
 import logging
 import traceback
 from collections import Counter
@@ -18,7 +19,7 @@ from app.models import Conference, Fee, ScrapeRun
 from app.pipeline.attendance import record as attendance_record
 from app.pipeline.geo import continent_of
 from app.pipeline.merge import refresh_fee_summary
-from app.pipeline.normalize import normalize_currency
+from app.pipeline.normalize import normalize_currency, sane_end_date
 from app.pipeline.validate import (
     DUPLICATE,
     VERIFIED,
@@ -124,6 +125,7 @@ def apply_extraction(
             setattr(conf, field, value)
             sources[field] = {"source": "homepage", "url": source_url}
     conf.field_sources = sources
+    conf.end_date = sane_end_date(conf.start_date, conf.end_date)
 
     checks: list[FeeCheck] = []
     if extracted.fees:
@@ -168,6 +170,10 @@ class _Job:
     homepage: str | None
     hint: str
     sections: list[str]
+    # Fingerprint of the text the LLM read last time; with `skip_unchanged` an identical text
+    # skips the LLM call.
+    fingerprint: str | None = None
+    skip_unchanged: bool = False
 
 
 @dataclass
@@ -175,9 +181,15 @@ class _Outcome:
     extracted: ExtractedPage | None = None
     note: str | None = None  # set when there was nothing to read
     text: str = ""  # what the LLM read; fees are validated against it
+    fingerprint: str | None = None  # of `text`
+    unchanged: bool = False  # same text as the last read: the LLM was not asked again
 
 
-def _job_for(conf: Conference) -> _Job:
+def fingerprint(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _job_for(conf: Conference, *, skip_unchanged: bool = False) -> _Job:
     sections: list[str] = []
     # Source pages that already carry fee/deadline text (EDAS register page, WikiCFP CFP text).
     for row in conf.listings:
@@ -188,7 +200,7 @@ def _job_for(conf: Conference) -> _Job:
         if row.source == "wikicfp" and row.description:
             sections.append(f"### wikicfp call for papers ({row.url})\n{row.description}")
     hint = f"{conf.acronym or ''} {conf.name} starting {conf.start_date or 'unknown date'}"
-    return _Job(conf.id, conf.homepage, hint, sections)
+    return _Job(conf.id, conf.homepage, hint, sections, conf.read_fingerprint, skip_unchanged)
 
 
 async def _gather_text(job: _Job, fetcher: Fetcher, settings: Settings) -> str | None:
@@ -221,14 +233,21 @@ async def _read_and_extract(
     text = await _gather_text(job, fetcher, settings)
     if text is None:
         return _Outcome(note="no homepage and no source page text")
+    digest = fingerprint(text)
+    if job.skip_unchanged and job.fingerprint == digest:
+        # The pages say exactly what they said last time, so the LLM would answer the same.
+        return _Outcome(text=text, fingerprint=digest, unchanged=True)
     extracted = await extractor.extract_conference(text, url=job.homepage, hint=job.hint)
-    return _Outcome(extracted=extracted, text=text)
+    return _Outcome(extracted=extracted, text=text, fingerprint=digest)
 
 
 def _apply_outcome(db: Session, conf: Conference, outcome: _Outcome) -> str:
-    """The quick part: write the result. Returns the resulting status."""
+    """The quick part: write the result. Returns the resulting status (or "unchanged")."""
     conf.enriched_at = datetime.now(UTC)
+    if outcome.unchanged:
+        return "unchanged"  # status, fees and note stay as the last read left them
     extracted = outcome.extracted
+    conf.read_fingerprint = outcome.fingerprint if extracted is not None else None
     if extracted is None:
         conf.status, conf.review_note = "needs_review", outcome.note
         return conf.status
@@ -281,8 +300,13 @@ async def run_enrich(
     only_missing: bool,
     continent: str | None = None,
     retry_no_fees: bool = False,
+    skip_unchanged: bool = True,
 ) -> None:
     """Enrich many conferences, several at a time (`enrich_concurrency`).
+
+    `skip_unchanged`: a conference read before whose pages give exactly the same text is not
+    sent to the LLM again (counted as "unchanged"). Turn it off after changing the prompt or
+    the extractor, when the same text could now give a better answer.
 
     `retry_no_fees` also takes conferences read before that ended without fees ("fees not
     published yet", "fees not found"), e.g. after raising `enrich_max_pages_per_site`.
@@ -316,7 +340,7 @@ async def run_enrich(
             if limit:
                 rows = rows[:limit]
             conferences = {c.id: c for c in rows}
-            jobs = [_job_for(c) for c in conferences.values()]
+            jobs = [_job_for(c, skip_unchanged=skip_unchanged) for c in conferences.values()]
 
             gate = asyncio.Semaphore(max(1, settings.enrich_concurrency))
             async with Fetcher(settings) as fetcher:

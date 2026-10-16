@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Scraper for computer science and technology conferences **starting 2026-10-01 to 2026-11-30**
+Scraper for computer science and technology conferences **starting 2026-10-01 to 2027-03-31**
 (`WINDOW_START`/`WINDOW_END` in `.env`). For each conference it collects name, dates, location,
 description, abstract/paper deadlines and, most importantly, **registration fees**. It combines
 several sources, with a FastAPI backend for testing each step on its own. SQLite for now; Alembic
@@ -16,6 +16,9 @@ uv run alembic revision --autogenerate -m "..." ; uv run alembic upgrade head
 uv run uvicorn app.main:app --reload --reload-include ".env" --host 127.0.0.1 --port 8080
 uv run python -m scripts.edas_login       # logs in with EDAS_USERNAME/PASSWORD from .env, or by hand
 .\scripts\dev.ps1 -Open                  # backend on 8080 + visualizer on 5173, Ctrl+C stops both
+uv run python -m scripts.export_mysql    # data -> data/exports/conference_data.sql.gz for phpMyAdmin
+# Everything at once: curl -X POST http://127.0.0.1:8080/pipeline/update  (or the dashboard button)
+uv run python -m scripts.copy_to_supabase  # whole database -> Supabase schema `scraper` (the API reads it)
 .\scripts\dev.ps1 -Prod -Open            # same, but serves the optimised visualizer build
 ```
 
@@ -24,6 +27,9 @@ uv run python -m scripts.edas_login       # logs in with EDAS_USERNAME/PASSWORD 
   8080 and needs no backend changes. Tabs: Conferences (default: glance figures, search, sort,
   plain-language fee status from `src/state.ts`), Timeline (deadlines on a calendar), Pipeline,
   Listings, Sources, Tools. "Play with the map" hides the UI and leaves the animated desk map.
+- **Supabase:** the update chain ends with a `publish` step when `SUPABASE_DB_URL` is set; it
+  copies the whole database into the private schema `scraper`, which the public API reads.
+  Deploy steps: `docs/DEPLOY.md`. psycopg needs `prepare_threshold=None` (Supabase's pooler).
 - `scripts/dev.ps1` runs the backend in its own hidden console (log in `data/backend.log`): a
   uvicorn reload sends Ctrl+C to its whole console, which used to stop the visualizer too.
 
@@ -36,6 +42,19 @@ uv run python -m scripts.edas_login       # logs in with EDAS_USERNAME/PASSWORD 
 - **CORS** (`app/main.py`): any localhost/127.0.0.1 port may call the API from a browser;
   deployed frontends go in `CORS_ORIGINS`. GET only, so a web page can't start scraping runs.
   The frontend's guide is `docs/API.md`.
+- **MariaDB copy** (`scripts/export_mysql.py`): conferences, fees, raw_listings and
+  alembic_version as a .sql.gz for phpMyAdmin's Import tab (drops and recreates the tables).
+  It removes the EDAS account's email, person ID, IP and session token from EDAS page text and
+  refuses to write a file that still has them. `raw_listings.source_id` gets `utf8mb4_bin`:
+  MariaDB's default collation ignores case and EasyChair has `icai2026` and `ICAI2026`.
+  Tested by importing into a throwaway XAMPP MariaDB 10.4 in strict mode.
+- **Public server** (DCISM, `conference-scraper-api.dcism.org`): runs the API with
+  `READ_ONLY=true` (only the data router; /sources, /pipeline, /browse, /tools are not
+  mounted) under pm2 on `127.0.0.1:20280` (the port DCISM's Apache proxies to). Since
+  2026-10-17 it reads Supabase's private `scraper` schema (`DATABASE_SCHEMA=scraper`), which
+  the update chain's `publish` step refreshes with `copy_to_supabase`; scraping stays on the
+  laptop. Setup and redeploy: `docs/DEPLOY.md` section 4. (It used to read a MariaDB copy
+  imported by hand; DCISM's DB port is closed from outside.)
 - Responses are gzipped. `/conferences` and `/listings` take `compact=true`, which leaves out the
   long text (`description`, `field_sources`) that lists don't show: all 732 conferences drop from
   2.4 MB to 50 KB over the wire.
@@ -113,7 +132,12 @@ running the pipeline.
   (robots.txt is 404). The user chose to read it through a real browser (`app/scrapers/ieee.py`,
   Playwright + stealth, at least `IEEE_DELAY_SECONDS` between loads): the search page's own
   `searchfacet` JSON is read as the page receives it, never by reusing IEEE's key. `pos` is a PAGE
-  number. Detail pages (`POST /sources/ieee/details`) give each conference's official website.
+  number. Detail pages (`POST /sources/ieee/details`) give each conference's official website. Since
+  October 2026 a detail page loads its data from `conference-api.ieee.org/public/details?id=`
+  (was `.../conf/details`; same JSON, `entity.eventDetail`). Missing that address looked
+  exactly like throttling ("stopped sending detail data"), so check `is_detail_response`
+  first when the details run stops at once. The update chain rests 15 min between IEEE's
+  search and detail pages.
 - **ConferenceIndex** (`/conferences/<topic>/<country>`) is plain HTML, 500 rows a page in date
   order from today, with no date filter; the adapter reads the computer-science page of each
   Asian country and stops paging past the window. Event pages carry structured dates, homepage and
@@ -183,8 +207,42 @@ running the pipeline.
   online attendance; "fully online" only counts when it is about the event itself (a hackathon
   or a past edition "was held online" misled the first run). Asia 2026-09-29: 324 online option,
   148 in person only, 228 not stated.
-- **SQLite takes one writer.** Running merge while other runs wrote made them fail with
-  "database is locked"; run write-heavy steps one after another.
+- **SQLite takes one writer.** Connections wait up to 60 s for it (`timeout` in `app/db.py`),
+  and collect commits each listing together with the run's counts, so no write stays open
+  while a page downloads. That lets the sources collect in parallel (different sites, each
+  with its own delay). Merge and dedupe hold the lock longer: run them after collection, as
+  the update chain does.
+- **Update chain** (`app/pipeline/update.py`, `POST /pipeline/update`, the dashboard's "Update
+  everything" button): every source at once, then filter, merge, IEEE websites, enrich (scope,
+  only new), history (only unchecked) and the MariaDB export, each a run of its own. A failed
+  step (EDAS login, AI quota) is recorded and the chain goes on. 2026-10-11: four sources
+  collected in parallel instead of one after another.
+- **Starting runs is idempotent** (`app/api/run_guard.py`, every POST that starts a run): an
+  `Idempotency-Key` header replays the run it started (200 + `Idempotent-Replayed: true`; same
+  key, other request = 422); an identical run still going is returned instead of a duplicate;
+  runs that would collide get 409 naming the running one (enrich vs ieee_details/recover/
+  validate/attendance; same-source collect; update vs everything); startup marks runs a dead
+  process left "running" as failed (writing server only, never the read-only one).
+- **The Supabase sync is an upsert**: only changed rows are written (`IS DISTINCT FROM`), gone
+  rows deleted, in one transaction; a repeat sync writes nothing. Check changes in its output.
+- **Full copy in Supabase** (`scripts/copy_to_supabase.py`): every table
+  into the private schema `scraper` (no grants for anon/authenticated, RLS without policies, not
+  in Supabase's exposed API schemas), replaced in one transaction, EDAS account details scrubbed
+  and checked, row counts checked.
+- **Tests:** some API tests read whatever database `DATABASE_URL` names; on a fresh checkout run
+  `uv run alembic upgrade head` first so they get an empty one.
+- **Never run enrich at the same time as the IEEE website lookup** (`ieee_details`). Enrich loads
+  its conferences up front; when it saves a "no homepage" result it overwrites the status the
+  lookup just reset to `collected`, so the conference keeps its new homepage but is marked
+  unreadable. It happened on 2026-10-11 (352 conferences, re-read in run 109). The update chain
+  runs the two in order; ad hoc scripts must too.
+- **Detail pages are reused for 7 days** (`DETAIL_CACHE_DAYS`, `Fetcher.cache_for`) during
+  collection; listing pages keep the 72 h limit so new CFPs still show up. A re-collection
+  within a week skips hundreds of 3 s detail fetches per source.
+- **Unchanged sites skip the LLM** (`conferences.read_fingerprint`, SHA-256 of the text enrich
+  sent): a re-read whose pages give the same text is counted "unchanged" and keeps its status,
+  so weekly `retry_no_fees` re-reads spend quota only on changed sites. `skip_unchanged=false`
+  after changing the prompt or extractor.
 - **Merge pitfall:** many events share generic names ("International Conference on Computer Science
   and Information Technology") and are held at the same venue on the same dates. Matching is by
   normalized acronym (`acronym_key`) plus a start date within 7 days. The name fallback never
@@ -278,6 +336,16 @@ running the pipeline.
 - Built: WikiCFP, EDAS, EasyChair CFP, ConferenceIndex, IEEE Computer Society and IEEE
   (browser), the whole pipeline with fee validation, missed-fee detection and site recovery, the
   Groq fallback, fees in USD/PHP, and the `visualizer/` dashboard.
+- Window widened to 2027-03-31 on 2026-10-11 (first run of the update chain): Asia 701 -> 1,415
+  conferences (1,261 not WASET-flagged), 793 with fees. Few Jan-Mar 2027 events list fees yet.
+- **Final verification, 2026-10-12:** fee check over every conference (run 110: 13,874 fees
+  confirmed on their pages, 449 no longer there, 81 implausible), then `scripts/audit_data.py`
+  (read-only data audit, exits 1 on a must-be-zero failure: all pass), 201 tests, ruff, web
+  build, Postgres parity (24/24) and the browser walkthrough (24/24). The audit found and the
+  pipeline now fixes: end dates with last year's year (`normalize.sane_end_date`, applied by
+  merge and enrich), currency spellings EURO/TL/KM/DA, conferences whose homepage moves the
+  start outside the window (kept, not published), and two missed duplicate pairs. Re-run the
+  audit after big runs: `uv run python -m scripts.audit_data`.
 - Blocked, not scraped: ACM, Springer (see above).
 - Fees appear close to the event: a re-read of 178 fee-less Asian conferences on 2026-09-29
   (four days after the last) found fees for only 3. Re-read weekly until the window closes:

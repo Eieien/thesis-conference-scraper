@@ -2,7 +2,7 @@
 
 import calendar
 import re
-from datetime import date
+from datetime import date, timedelta
 
 import dateparser
 from price_parser import Price
@@ -127,11 +127,19 @@ _SYMBOL_TO_ISO = {
     "VND": "VND",
     "₫": "VND",
     "฿": "THB",
+    # Spellings found on real fee pages (2026-10-12 audit): a Turkish conference's "EURO" and "TL",
+    # Bosnia's convertible mark "KM", Algeria's dinar "DA".
+    "EURO": "EUR",
+    "EUROS": "EUR",
+    "TL": "TRY",
+    "₺": "TRY",
+    "KM": "BAM",
+    "DA": "DZD",
 }
 _ISO_RE = re.compile(r"\b([A-Z]{3})\b")
 _KNOWN_ISO = set(
     "USD EUR GBP JPY CNY INR IDR MYR PHP KRW AUD CAD SGD HKD TWD BRL THB VND CHF SEK NOK DKK "
-    "PLN CZK TRY AED SAR ZAR MXN NZD EGP PKR BDT LKR NGN KES MAD TND DZD".split()
+    "PLN CZK TRY AED SAR ZAR MXN NZD EGP PKR BDT LKR NGN KES MAD TND DZD BAM".split()
 )
 
 
@@ -142,6 +150,19 @@ def normalize_currency(raw: str | None) -> str | None:
     if key in _KNOWN_ISO:
         return key
     return _SYMBOL_TO_ISO.get(key) or _SYMBOL_TO_ISO.get(raw.strip())
+
+
+def sane_end_date(start: date | None, end: date | None) -> date | None:
+    """An end date that can be true. Listings sometimes carry last year's year in the end date
+    (WikiCFP: ICDM Applied Track "12 Nov 2026 - 15 Nov 2025"): with the start's year it lands a few
+    days later, so use that. Any other end before the start is dropped as unknown."""
+    if start is None or end is None or end >= start:
+        return end
+    try:
+        fixed = end.replace(year=start.year)
+    except ValueError:  # 29 February
+        return None
+    return fixed if start <= fixed <= start + timedelta(days=31) else None
 
 
 def parse_money(text: str | None) -> tuple[float | None, str | None]:

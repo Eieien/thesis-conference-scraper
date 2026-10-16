@@ -23,9 +23,24 @@ settings = get_settings()
 settings.ensure_dirs()
 
 _is_sqlite = settings.database_url.startswith("sqlite")
+if _is_sqlite:
+    # timeout: wait up to a minute for another writer (parallel collects) instead of failing
+    # with "database is locked" after the default 5 s.
+    _connect_args = {"check_same_thread": False, "timeout": 60}
+elif settings.database_url.startswith("postgresql"):
+    # prepare_threshold=None: Supabase's pooler can't keep server-side prepared statements.
+    _connect_args = {"connect_timeout": 20, "prepare_threshold": None}
+else:
+    _connect_args = {}
 engine = create_engine(
     settings.database_url,
-    connect_args={"check_same_thread": False} if _is_sqlite else {},
+    connect_args=_connect_args,
+    pool_pre_ping=not _is_sqlite,  # the pooler drops idle connections
+    execution_options=(
+        {"schema_translate_map": {None: settings.database_schema}}
+        if settings.database_schema
+        else {}
+    ),
 )
 
 if _is_sqlite:
